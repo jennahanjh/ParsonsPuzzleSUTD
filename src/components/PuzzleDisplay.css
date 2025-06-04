@@ -1,24 +1,48 @@
-.puzzle-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
+/* ... (keep existing styles for .puzzle-container, .App-header etc.) ... */
 
-.puzzle-container h2, .puzzle-container h3 {
-  color: #333;
-}
-
-.puzzle-palette {
-  border: 1px dashed #ddd;
-  padding: 10px;
+.dnd-columns-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
   margin-top: 20px;
-  min-height: 100px;
+}
+
+.puzzle-palette-container, .puzzle-workspace-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* Stack h3 and droppable area */
+}
+
+.droppable-area { /* Common styling for both palette and workspace visual areas */
+  padding: 10px;
+  border-radius: 5px;
+  min-height: 150px; /* Ensure they have some height */
+  transition: background-color 0.2s ease;
+}
+
+.puzzle-palette { /* Specific to palette */
   background-color: #f0f8ff; /* Light alice blue for palette */
+  border: 1px dashed #ddd;
 }
 
-.puzzle-workspace {
-  border: 2px solid #4CAF50; /* Green border for workspace */
-  padding: 10px;
-  margin-top: 20px;
-  min-height: 200px;
+.puzzle-workspace { /* Specific to workspace */
   background-color: #e8f5e9; /* Light green for workspace */
+  border: 2px solid #4CAF50;
 }
+
+/* Visual feedback when an item is dragged over a droppable area can be handled by dnd-kit's 'isOver' state if needed,
+   or by CSS if the drag overlay is sufficient.
+   The ProofBlock itself now handles its 'isDragging' style.
+*/
+
+.empty-message { /* Renamed from empty-workspace-message for reusability */
+  padding: 20px;
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* ProofBlock.css should define how .proof-block looks.
+   The isDragging style is now handled within ProofBlock.jsx style prop for transform/transition.
+   You can still add global styles for .proof-block.is-dragging if needed, but direct style manipulation is powerful.
+*/
