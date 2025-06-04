@@ -1,9 +1,12 @@
-# Parsons Puzzle for Algorithms (UROP Project)
+# React + Vite
 
-## Project Overview
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-The 50.004 Algorithms course at SUTD is known for its difficulty, primarily due to the requirement for students to engage in formal proofs, manipulate mathematical symbols and abstract expressions, and provide rigorous mathematical justifications in their assessments. These skills are fundamental for analyzing program complexities and ensuring high software performance.
+Currently, two official plugins are available:
 
-This project aims to adapt Parsons puzzles, traditionally used in programming education, for Algorithms questions. Parsons puzzles require students to arrange scrambled blocks of code (or in this case, logical fragments) to form a coherent solution. This approach encourages students to focus on the structure and flow of a mathematical argument rather than just the final result, potentially strengthening their ability to write formal proofs independently.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-This repository will host the source code for the Parsons puzzle web application developed as part of this project.
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
