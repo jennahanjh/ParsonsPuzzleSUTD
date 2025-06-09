@@ -9,12 +9,14 @@ import './App.css'; // For any global app styles
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Parson's Puzzles for Math Proofs</h1>
-      </header>
-      <main>
-        <PuzzleDisplay puzzle={currentPuzzle} />
-      </main>
+      <div className="container">
+        <header className="App-header">
+          <h1>Parson's Puzzles for Math Proofs</h1>
+        </header>
+        <main className="main-content">
+          <PuzzleDisplay puzzle={currentPuzzle} />
+        </main>
+      </div>
     </div>
   );
 }

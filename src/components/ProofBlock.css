@@ -1,11 +1,11 @@
 .proof-block {
   border: 1px solid #ccc;
   padding: 10px 15px;
-  margin: 8px;
+  margin-bottom: 10px;           /* instead of '8px' all sides */
   border-radius: 5px;
   background-color: #2c2c2c;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: grab; /* Will be useful for drag and drop later */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: grab;
   font-family: sans-serif;
 }
 

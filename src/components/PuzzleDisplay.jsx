@@ -6,6 +6,7 @@ import {
   useSensor,
   useSensors,
   closestCorners,
+  useDroppable,
   DragOverlay, // For a smoother drag preview if desired
   // rectIntersection, // Alternative collision detection
 } from '@dnd-kit/core';
@@ -55,58 +56,6 @@ const PuzzleDisplay = ({ puzzle }) => {
     setActiveId(active.id);
   };
 
-  const handleDragOver = (event) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id;
-    const overId = over.id;
-
-    if (activeId === overId) return;
-
-    const activeContainer = findContainer(activeId);
-    const overContainer = findContainer(overId);
-
-    if (!activeContainer || !overContainer || activeContainer === overContainer) {
-      return; // Only handle moves between different containers here for now
-              // Reordering within the same container is handled by SortableContext by default if items are moved over each other
-    }
-    
-    // Moving between containers
-    if (activeContainer === 'palette' && overContainer === 'workspace') {
-      setAvailableBlocks((prev) => prev.filter((item) => item.id !== activeId));
-      setProofBlocks((prev) => {
-        const activeItemIndex = prev.findIndex(item => item.id === activeId); // Check if it's already there (should not happen if logic is correct)
-        if (activeItemIndex !== -1) return prev; // Should not happen
-        
-        const overItemIndex = prev.findIndex(item => item.id === overId);
-        const itemToMove = availableBlocks.find(item => item.id === activeId);
-        if (!itemToMove) return prev;
-
-        if (overItemIndex !== -1) {
-          return [...prev.slice(0, overItemIndex), itemToMove, ...prev.slice(overItemIndex)];
-        }
-        return [...prev, itemToMove]; // Add to end if not over a specific item in workspace
-      });
-    } else if (activeContainer === 'workspace' && overContainer === 'palette') {
-      setProofBlocks((prev) => prev.filter((item) => item.id !== activeId));
-      setAvailableBlocks((prev) => {
-        const activeItemIndex = prev.findIndex(item => item.id === activeId);
-        if (activeItemIndex !== -1) return prev;
-
-        const overItemIndex = prev.findIndex(item => item.id === overId);
-        const itemToMove = proofBlocks.find(item => item.id === activeId);
-        if(!itemToMove) return prev;
-        
-        if (overItemIndex !== -1) {
-          return [...prev.slice(0, overItemIndex), itemToMove, ...prev.slice(overItemIndex)];
-        }
-        return [...prev, itemToMove]; // Add to end if not over a specific item in palette
-      });
-    }
-  };
-
-
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
@@ -118,7 +67,7 @@ const PuzzleDisplay = ({ puzzle }) => {
 
     const activeContainer = findContainer(activeId);
     // over.data.current?.sortable?.containerId can also give the container ID
-    const overContainer = over.data.current?.sortable?.containerId || findContainer(overId);
+    const overContainer = findContainer(overId) || over.id;
 
 
     if (!activeContainer || !overContainer) return;
@@ -144,7 +93,7 @@ const PuzzleDisplay = ({ puzzle }) => {
       }
     } else {
       // Moving from one list to another (this logic is more complex with dnd-kit)
-      // The state update for moving between lists should ideally happen in onDragOver for immediate feedback,
+      // The state update for moving between lists should ideally happen in onDragOver for immediate feedback, // ky: on
       // and onDragEnd finalizes it or handles cases where onDragOver didn't fully cover it.
       // For now, we'll rely on a simplified onDragEnd transfer if onDragOver didn't complete it.
       let itemToMove;
@@ -173,8 +122,35 @@ const PuzzleDisplay = ({ puzzle }) => {
         });
       }
     }
+    console.log({
+      activeId,
+      overId,
+      activeContainer,
+      overContainer,
+      from: activeContainer,
+      to: overContainer,
+    });
   };
-  
+
+  // Define reusable droppable wrappers
+  const PaletteDroppable = ({ children }) => {
+    const { setNodeRef } = useDroppable({ id: 'palette' });
+    return (
+      <div ref={setNodeRef} className="puzzle-palette droppable-area">
+        {children}
+      </div>
+    );
+  };
+
+  const WorkspaceDroppable = ({ children }) => {
+    const { setNodeRef } = useDroppable({ id: 'workspace' });
+    return (
+      <div ref={setNodeRef} className="puzzle-workspace droppable-area">
+        {children}
+      </div>
+    );
+  };
+    
   const activeBlock = activeId ? getBlockById(activeId) : null;
 
   if (!puzzle) {
@@ -186,7 +162,6 @@ const PuzzleDisplay = ({ puzzle }) => {
       sensors={sensors}
       collisionDetection={closestCorners} // Or rectIntersection
       onDragStart={handleDragStart}
-      onDragOver={handleDragOver} // onDragOver is often preferred for inter-list movement
       onDragEnd={handleDragEnd}
     >
       <div className="puzzle-container">
@@ -197,28 +172,28 @@ const PuzzleDisplay = ({ puzzle }) => {
           <div className="puzzle-palette-container"> {/* Container for SortableContext */}
             <h3>Available Steps:</h3>
             <SortableContext items={availableBlocks.map(b => b.id)} strategy={verticalListSortingStrategy} id="palette">
-              <div className="puzzle-palette droppable-area"> {/* Actual visual droppable area */}
+              <PaletteDroppable>
                 {availableBlocks.map(block => (
                   <ProofBlock key={block.id} id={block.id} latexContent={block.latex} />
                 ))}
                 {availableBlocks.length === 0 && (
                   <div className="empty-message">Palette is empty</div>
                 )}
-              </div>
+              </PaletteDroppable>
             </SortableContext>
           </div>
 
           <div className="puzzle-workspace-container"> {/* Container for SortableContext */}
             <h3>Your Proof:</h3>
             <SortableContext items={proofBlocks.map(b => b.id)} strategy={verticalListSortingStrategy} id="workspace">
-              <div className="puzzle-workspace droppable-area"> {/* Actual visual droppable area */}
+              <WorkspaceDroppable>
                 {proofBlocks.map(block => (
                   <ProofBlock key={block.id} id={block.id} latexContent={block.latex} />
                 ))}
                 {proofBlocks.length === 0 && (
                   <div className="empty-message">Drag steps here</div>
                 )}
-              </div>
+              </WorkspaceDroppable>
             </SortableContext>
           </div>
         </div>
