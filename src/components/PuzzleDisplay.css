@@ -11,6 +11,7 @@
   flex: 1;
   display: flex;
   flex-direction: column; /* Stack h3 and droppable area */
+  margin-left: 40px; /* for spaces between the boxes & the edges of the computer screen */
 }
 
 .droppable-area { /* Common styling for both palette and workspace visual areas */
