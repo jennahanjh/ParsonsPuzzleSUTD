@@ -1,14 +1,87 @@
 .App {
-  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-canvas-default) 0%, #0a0e14 100%);
+  position: relative;
+}
+
+.App::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-fg), transparent);
+  opacity: 0.5;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .App-header {
-  background-color: #282c34;
-  padding: 20px;
-  color: white;
-  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--color-canvas-subtle) 0%, #1c2128 100%);
+  border-bottom: 1px solid var(--color-border-default);
+  padding: 24px 0;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.App-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23161b22' fill-opacity='0.4'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+  pointer-events: none;
 }
 
 .App-header h1 {
   margin: 0;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-fg-default) 0%, var(--color-accent-fg) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.025em;
+}
+
+.main-content {
+  padding-bottom: 48px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+  
+  .App-header {
+    padding: 20px 0;
+    margin-bottom: 24px;
+  }
+  
+  .App-header h1 {
+    font-size: 2rem;
+  }
+  
+  .main-content {
+    padding-bottom: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .App-header h1 {
+    font-size: 1.75rem;
+  }
 }
