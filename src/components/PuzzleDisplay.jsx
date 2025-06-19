@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   DndContext,
   PointerSensor,
@@ -7,27 +7,30 @@ import {
   useSensors,
   closestCorners,
   useDroppable,
-  DragOverlay, // For a smoother drag preview if desired
-  // rectIntersection, // Alternative collision detection
+  DragOverlay,
 } from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
-  verticalListSortingStrategy, // Strategy for how items are sorted
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
 import ProofBlock from './ProofBlock';
+import ProofValidationDisplay from './ProofValidationDisplay';
 import KatexRenderer from './KatexRenderer';
-import './PuzzleDisplay.css'; // Ensure this is imported
+import './PuzzleDisplay.css';
 
 const PuzzleDisplay = ({ puzzle }) => {
   const [availableBlocks, setAvailableBlocks] = useState([]);
   const [proofBlocks, setProofBlocks] = useState([]);
-  const [activeId, setActiveId] = useState(null); // To store the ID of the dragging item
+  const [activeId, setActiveId] = useState(null);
+  const [validationResult, setValidationResult] = useState(null);
 
   useEffect(() => {
     if (puzzle && puzzle.blocks) {
-      setAvailableBlocks(puzzle.blocks);
+      // Shuffle the blocks for the puzzle
+      const shuffledBlocks = [...puzzle.blocks].sort(() => Math.random() - 0.5);
+      setAvailableBlocks(shuffledBlocks);
       setProofBlocks([]);
     }
   }, [puzzle]);
@@ -63,19 +66,17 @@ const PuzzleDisplay = ({ puzzle }) => {
     if (!over) return;
 
     const activeId = active.id;
-    const overId = over.id; // This can be the ID of a droppable container or a sortable item
+    const overId = over.id;
 
     const activeContainer = findContainer(activeId);
-    // over.data.current?.sortable?.containerId can also give the container ID
     const overContainer = findContainer(overId) || over.id;
-
 
     if (!activeContainer || !overContainer) return;
 
     if (activeContainer === overContainer) {
       // Reordering within the same list
       if (activeContainer === 'palette') {
-        if (activeId !== overId) { // overId here is the item ID it's dropped on
+        if (activeId !== overId) {
           setAvailableBlocks((items) => {
             const oldIndex = items.findIndex(item => item.id === activeId);
             const newIndex = items.findIndex(item => item.id === overId);
@@ -92,24 +93,20 @@ const PuzzleDisplay = ({ puzzle }) => {
         }
       }
     } else {
-      // Moving from one list to another (this logic is more complex with dnd-kit)
-      // The state update for moving between lists should ideally happen in onDragOver for immediate feedback, // ky: on
-      // and onDragEnd finalizes it or handles cases where onDragOver didn't fully cover it.
-      // For now, we'll rely on a simplified onDragEnd transfer if onDragOver didn't complete it.
+      // Moving from one list to another
       let itemToMove;
       if (activeContainer === 'palette') {
         itemToMove = availableBlocks.find(item => item.id === activeId);
         if (!itemToMove) return;
         setAvailableBlocks(prev => prev.filter(item => item.id !== activeId));
         setProofBlocks(prev => {
-            // If overId is a container, add to end. If overId is an item, insert before/after.
             const overIndex = prev.findIndex(item => item.id === overId);
             if (overIndex !== -1) {
                 return [...prev.slice(0, overIndex), itemToMove, ...prev.slice(overIndex)];
             }
-            return [...prev, itemToMove]; // Add to end if dropped on container itself
+            return [...prev, itemToMove];
         });
-      } else { // Moving from workspace to palette
+      } else {
         itemToMove = proofBlocks.find(item => item.id === activeId);
         if (!itemToMove) return;
         setProofBlocks(prev => prev.filter(item => item.id !== activeId));
@@ -122,14 +119,30 @@ const PuzzleDisplay = ({ puzzle }) => {
         });
       }
     }
-    console.log({
-      activeId,
-      overId,
-      activeContainer,
-      overContainer,
-      from: activeContainer,
-      to: overContainer,
-    });
+  };
+
+  // Use useCallback to prevent re-creation on every render
+  const handleValidationChange = useCallback((result) => {
+    setValidationResult(result);
+  }, []);
+
+  const handleReset = () => {
+    if (puzzle && puzzle.blocks) {
+      const shuffledBlocks = [...puzzle.blocks].sort(() => Math.random() - 0.5);
+      setAvailableBlocks(shuffledBlocks);
+      setProofBlocks([]);
+    }
+  };
+
+  const handleShowSolution = () => {
+    if (puzzle && puzzle.blocks && puzzle.solutionOrder) {
+      const solutionBlocks = puzzle.solutionOrder.map(id => 
+        puzzle.blocks.find(block => block.id === id)
+      ).filter(Boolean);
+      
+      setProofBlocks(solutionBlocks);
+      setAvailableBlocks([]);
+    }
   };
 
   // Define reusable droppable wrappers
@@ -160,16 +173,35 @@ const PuzzleDisplay = ({ puzzle }) => {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners} // Or rectIntersection
+      collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="puzzle-container">
-        <h2><KatexRenderer latex={puzzle.title} /></h2>
-        <p><strong>Prove: <KatexRenderer latex={puzzle.statement} /></strong></p>
-        
+        <div className="puzzle-header">
+          <h2><KatexRenderer latex={puzzle.title} /></h2>
+          <p><strong>Prove: <KatexRenderer latex={puzzle.statement} /></strong></p>
+          
+          <div className="puzzle-controls">
+            <button 
+              className="control-button reset" 
+              onClick={handleReset}
+              title="Shuffle blocks and start over"
+            >
+              🔄 Reset
+            </button>
+            <button 
+              className="control-button solution" 
+              onClick={handleShowSolution}
+              title="Show the correct solution"
+            >
+              💡 Show Solution
+            </button>
+          </div>
+        </div>
+
         <div className="dnd-columns-container">
-          <div className="puzzle-palette-container"> {/* Container for SortableContext */}
+          <div className="puzzle-palette-container">
             <h3>Available Steps:</h3>
             <SortableContext items={availableBlocks.map(b => b.id)} strategy={verticalListSortingStrategy} id="palette">
               <PaletteDroppable>
@@ -177,27 +209,38 @@ const PuzzleDisplay = ({ puzzle }) => {
                   <ProofBlock key={block.id} id={block.id} latexContent={block.latex} />
                 ))}
                 {availableBlocks.length === 0 && (
-                  <div className="empty-message">Palette is empty</div>
+                  <div className="empty-message">All blocks are in use</div>
                 )}
               </PaletteDroppable>
             </SortableContext>
           </div>
 
-          <div className="puzzle-workspace-container"> {/* Container for SortableContext */}
+          <div className="puzzle-workspace-container">
             <h3>Your Proof:</h3>
             <SortableContext items={proofBlocks.map(b => b.id)} strategy={verticalListSortingStrategy} id="workspace">
               <WorkspaceDroppable>
-                {proofBlocks.map(block => (
-                  <ProofBlock key={block.id} id={block.id} latexContent={block.latex} />
+                {proofBlocks.map((block, index) => (
+                  <div key={block.id} className="proof-step">
+                    <span className="step-number">{index + 1}.</span>
+                    <ProofBlock id={block.id} latexContent={block.latex} />
+                  </div>
                 ))}
                 {proofBlocks.length === 0 && (
-                  <div className="empty-message">Drag steps here</div>
+                  <div className="empty-message">Drag steps here to build your proof</div>
                 )}
               </WorkspaceDroppable>
             </SortableContext>
           </div>
         </div>
+
+        {/* Validation Display */}
+        <ProofValidationDisplay 
+          puzzle={puzzle}
+          proofBlocks={proofBlocks}
+          onValidationChange={handleValidationChange}
+        />
       </div>
+
       {/* DragOverlay provides a smoother visual drag experience */}
       <DragOverlay dropAnimation={null}>
         {activeId && activeBlock ? (
