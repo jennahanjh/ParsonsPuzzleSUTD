@@ -1,6 +1,7 @@
 export const N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED = {
   id: 'proof1',
   title: '\\text{Prove } n^2 + n^3 = \\Theta(n^3)',
+  displayTitle: 'Prove n² + n³ = Θ(n³)',
   statement: 'n^2 + n^3 = \\Theta(n^3)', // This one is mostly math, so it might be fine, but let's be consistent if issues arise.
   blocks: [
     { id: 'block1-1', latex: '\\text{To show } f(n) = \\Theta(g(n)) \\text{, we need to show } f(n) = O(g(n)) \\text{ and } f(n) = \\Omega(g(n)).' },
@@ -21,6 +22,7 @@ export const N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED = {
 export const LOG_N_IS_O_N = {
   id: 'proof2',
   title: '\\text{Prove } \\log n = O(n)',
+  displayTitle: 'Prove log n = O(n)',
   statement: '\\log n = O(n)',
   blocks: [
     { id: 'block2-1', latex: '\\text{To show } f(n) = O(g(n)) \\text{, we need to find positive constants } c \\text{ and } n_0 \\text{ such that } 0 \\le f(n) \\le cg(n) \\text{ for all } n \\ge n_0.' },
@@ -37,6 +39,7 @@ export const LOG_N_IS_O_N = {
 export const N_LOG_N_IS_O_N_SQUARED = {
   id: 'proof3',
   title: '\\text{Prove } n \\log n = O(n^2)',
+  displayTitle: 'Prove n log n = O(n²)',
   statement: 'n \\log n = O(n^2)',
   blocks: [
     { id: 'block3-1', latex: '\\text{To show } f(n) = O(g(n)) \\text{, we need to find positive constants } c \\text{ and } n_0 \\text{ such that } 0 \\le f(n) \\le cg(n) \\text{ for all } n \\ge n_0.' },
@@ -55,6 +58,7 @@ export const N_LOG_N_IS_O_N_SQUARED = {
 export const TWO_TO_N_IS_NOT_O_N_CUBED = {
   id: 'proof4',
   title: '\\text{Prove } 2^n \\neq O(n^3)',
+  displayTitle: 'Prove 2ⁿ ≠ O(n³)',
   statement: '2^n \\neq O(n^3)',
   blocks: [
     { id: 'block4-1', latex: '\\text{To show } f(n) \\neq O(g(n)) \\text{, we need to show that for any positive constants } c \\text{ and } n_0 \\text{, there exists } n \\ge n_0 \\text{ such that } f(n) > cg(n).' },

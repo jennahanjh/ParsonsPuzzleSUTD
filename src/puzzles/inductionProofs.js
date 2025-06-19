@@ -1,6 +1,7 @@
 export const SUM_OF_FIRST_N_INTEGERS = {
   id: 'induction1',
   title: '\\text{Prove by induction: } \\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}',
+  displayTitle: 'Prove by induction: Sum of first n integers',
   statement: '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}',
   blocks: [
     { id: 'ind1-1', latex: '\\text{Proof by induction on } n \\ge 1.' },
@@ -22,6 +23,7 @@ export const SUM_OF_FIRST_N_INTEGERS = {
 export const SUM_OF_POWERS_OF_TWO = {
   id: 'induction2',
   title: '\\text{Prove by induction: } \\sum_{i=0}^{n} 2^i = 2^{n+1} - 1',
+  displayTitle: 'Prove by induction: Sum of powers of 2',
   statement: '\\sum_{i=0}^{n} 2^i = 2^{n+1} - 1',
   blocks: [
     { id: 'ind2-1', latex: '\\text{Proof by induction on } n \\ge 0.' },
@@ -43,6 +45,7 @@ export const SUM_OF_POWERS_OF_TWO = {
 export const DIVISIBILITY_BY_THREE = {
   id: 'induction3',
   title: '\\text{Prove by induction: } 4^n - 1 \\text{ is divisible by } 3 \\text{ for all } n \\ge 1',
+  displayTitle: 'Prove by induction: 4^n - 1 divisible by 3',
   statement: '4^n - 1 \\text{ is divisible by } 3 \\text{ for all } n \\ge 1',
   blocks: [
     { id: 'ind3-1', latex: '\\text{Proof by induction on } n \\ge 1.' },

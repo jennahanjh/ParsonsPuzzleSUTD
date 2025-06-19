@@ -1,6 +1,7 @@
 export const FIBONACCI_RECURSION = {
   id: 'recursion1',
   title: '\\text{Prove the recurrence relation for Fibonacci numbers: } F(n) = F(n-1) + F(n-2)',
+  displayTitle: 'Fibonacci Recurrence Relation',
   statement: 'F(n) = F(n-1) + F(n-2) \\text{ for } n \\ge 2',
   blocks: [
     { id: 'rec1-1', latex: '\\text{The Fibonacci sequence is defined as follows:}' },
@@ -20,6 +21,7 @@ export const FIBONACCI_RECURSION = {
 export const TOWERS_OF_HANOI = {
   id: 'recursion2',
   title: '\\text{Prove: Towers of Hanoi with } n \\text{ disks requires } 2^n - 1 \\text{ moves}',
+  displayTitle: 'Towers of Hanoi: 2ⁿ - 1 moves',
   statement: 'T(n) = 2^n - 1',
   blocks: [
     { id: 'rec2-1', latex: '\\text{Let } T(n) \\text{ be the minimum number of moves to solve Towers of Hanoi with } n \\text{ disks.}' },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   DndContext,
   PointerSensor,
@@ -20,11 +20,10 @@ import ProofValidationDisplay from './ProofValidationDisplay';
 import KatexRenderer from './KatexRenderer';
 import './PuzzleDisplay.css';
 
-const PuzzleDisplay = ({ puzzle }) => {
+const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {
   const [availableBlocks, setAvailableBlocks] = useState([]);
   const [proofBlocks, setProofBlocks] = useState([]);
   const [activeId, setActiveId] = useState(null);
-  const [validationResult, setValidationResult] = useState(null);
 
   useEffect(() => {
     if (puzzle && puzzle.blocks) {
@@ -120,12 +119,7 @@ const PuzzleDisplay = ({ puzzle }) => {
       }
     }
   };
-
   // Use useCallback to prevent re-creation on every render
-  const handleValidationChange = useCallback((result) => {
-    setValidationResult(result);
-  }, []);
-
   const handleReset = () => {
     if (puzzle && puzzle.blocks) {
       const shuffledBlocks = [...puzzle.blocks].sort(() => Math.random() - 0.5);
@@ -177,10 +171,9 @@ const PuzzleDisplay = ({ puzzle }) => {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="puzzle-container">
-        <div className="puzzle-header">
+      <div className="puzzle-container">        <div className="puzzle-header">
           <h2><KatexRenderer latex={puzzle.title} /></h2>
-          <p><strong>Prove: <KatexRenderer latex={puzzle.statement} /></strong></p>
+          <p><strong><KatexRenderer latex={puzzle.statement} /></strong></p>
           
           <div className="puzzle-controls">
             <button 
@@ -233,11 +226,12 @@ const PuzzleDisplay = ({ puzzle }) => {
           </div>
         </div>
 
-        {/* Validation Display */}
-        <ProofValidationDisplay 
+        {/* Validation Display */}        <ProofValidationDisplay 
           puzzle={puzzle}
           proofBlocks={proofBlocks}
-          onValidationChange={handleValidationChange}
+          onReset={handleReset}
+          onNextPuzzle={onNextPuzzle}
+          isLastPuzzle={isLastPuzzle}
         />
       </div>
 

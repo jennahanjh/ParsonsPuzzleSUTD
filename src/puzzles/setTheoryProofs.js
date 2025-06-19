@@ -1,6 +1,7 @@
 export const DISTRIBUTIVE_LAW_SETS = {
   id: 'set1',
   title: '\\text{Prove: } A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)',
+  displayTitle: 'Prove: Distributive Law for Sets',
   statement: 'A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)',
   blocks: [
     { id: 'set1-1', latex: '\\text{To prove set equality, we show that each side is a subset of the other.}' },
@@ -25,6 +26,7 @@ export const DISTRIBUTIVE_LAW_SETS = {
 export const DE_MORGAN_LAW = {
   id: 'set2',
   title: '\\text{Prove: } \\overline{A \\cup B} = \\overline{A} \\cap \\overline{B}',
+  displayTitle: 'Prove: De Morgan\'s Law for Sets',
   statement: '\\overline{A \\cup B} = \\overline{A} \\cap \\overline{B}',
   blocks: [
     { id: 'set2-1', latex: '\\text{To prove set equality, we show that each side is a subset of the other.}' },

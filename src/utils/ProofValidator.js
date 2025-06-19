@@ -12,7 +12,6 @@ export class ProofValidator {
     this.solutionOrder = puzzle.solutionOrder;
     this.blockMap = new Map(puzzle.blocks.map(block => [block.id, block]));
   }
-
   /**
    * Validates the complete proof sequence
    * @param {Array} userOrder - Array of block IDs in user's order
@@ -31,6 +30,33 @@ export class ProofValidator {
           missingBlocks: this.solutionOrder.length,
           extraBlocks: 0
         }
+      };
+    }
+
+    // Check for puzzle mismatch
+    const blockValidation = this.validateBlockIds(userOrder);
+    if (!blockValidation.isValid) {
+      console.warn('ProofValidator: Block ID mismatch detected', {
+        puzzleId: this.puzzle.id,
+        puzzleTitle: this.puzzle.title,
+        invalidBlocks: blockValidation.invalidBlocks,
+        userOrder
+      });
+      
+      return {
+        isCorrect: false,
+        score: 0,
+        feedback: `Error: Some blocks don't belong to the current puzzle "${this.puzzle.title}". Please refresh the page.`,
+        details: {
+          totalBlocks: this.solutionOrder.length,
+          correctBlocks: 0,
+          incorrectBlocks: userOrder.length,
+          missingBlocks: this.solutionOrder.length,
+          extraBlocks: userOrder.length,
+          puzzleMismatch: true,
+          invalidBlocks: blockValidation.invalidBlocks
+        },
+        hints: []
       };
     }
 
@@ -128,7 +154,6 @@ export class ProofValidator {
 
     return null;
   }
-
   /**
    * Analyzes the complete sequence and returns detailed results
    * @private
@@ -137,12 +162,17 @@ export class ProofValidator {
     const solutionSet = new Set(this.solutionOrder);
     const userSet = new Set(userOrder);
     
-    const correctBlocks = [...userSet].filter(id => solutionSet.has(id)).length;
-    const extraBlocks = userOrder.length - correctBlocks;
-    const missingBlocks = this.solutionOrder.length - correctBlocks;
+    // Count blocks that exist in both solution and user's attempt
+    const correctBlocksInSolution = [...userSet].filter(id => solutionSet.has(id)).length;
+    
+    // Count extra blocks (blocks in user's solution but not in correct solution)
+    const extraBlocks = [...userSet].filter(id => !solutionSet.has(id)).length;
+    
+    // Count missing blocks (blocks in correct solution but not in user's attempt)
+    const missingBlocks = [...solutionSet].filter(id => !userSet.has(id)).length;
     
     const isComplete = userOrder.length === this.solutionOrder.length && 
-                      correctBlocks === this.solutionOrder.length;
+                      missingBlocks === 0 && extraBlocks === 0;
     
     const correctSequence = isComplete && 
                            this._isCorrectSequence(userOrder, 0, userOrder.length);
@@ -169,7 +199,7 @@ export class ProofValidator {
     return {
       totalBlocks: this.solutionOrder.length,
       userBlocks: userOrder.length,
-      correctBlocks,
+      correctBlocks: correctBlocksInSolution,
       extraBlocks,
       missingBlocks,
       isComplete,
@@ -263,17 +293,28 @@ export class ProofValidator {
     }
 
     return feedback.length > 0 ? feedback.join(' ') : "Keep working on your proof!";
-  }
-
-  /**
+  }  /**
    * Generates specific hints for improvement
    * @private
    */
   _generateHints(result, userOrder) {
     const hints = [];
+    const usedBlocks = new Set(); // Track blocks already suggested
 
     if (result.correctSequence) {
       return hints;
+    }
+
+    // Safety check: ensure we're working with the right puzzle
+    const blockValidation = this.validateBlockIds(userOrder);
+    if (!blockValidation.isValid) {
+      console.warn('ProofValidator: Cannot generate hints due to puzzle mismatch');
+      return [{
+        type: 'error',
+        message: 'Please refresh the page - there seems to be a puzzle mismatch.',
+        latex: '',
+        blockId: null
+      }];
     }
 
     // Hint about first incorrect position
@@ -281,50 +322,74 @@ export class ProofValidator {
       const firstError = result.incorrectlyPositioned[0];
       const expectedBlock = this.blockMap.get(firstError.expectedBlockId);
       
-      if (expectedBlock) {
+      if (expectedBlock && !usedBlocks.has(firstError.expectedBlockId)) {
         hints.push({
           type: 'position',
           message: `The block at position ${firstError.position + 1} should be:`,
-          latex: expectedBlock.latex, // Include full LaTeX for rendering
+          latex: expectedBlock.latex,
           position: firstError.position,
           expectedBlockId: firstError.expectedBlockId
         });
+        usedBlocks.add(firstError.expectedBlockId);
       }
     }
 
-    // Hint about missing blocks
-    if (result.missingBlocks > 0) {
-      const missingIds = this.solutionOrder.filter(id => !userOrder.includes(id));
-      if (missingIds.length > 0) {
-        const missingBlock = this.blockMap.get(missingIds[0]);
-        if (missingBlock) {
-          hints.push({
-            type: 'missing',
-            message: `You're missing this important step:`,
-            latex: missingBlock.latex, // Include full LaTeX for rendering
-            blockId: missingIds[0]
-          });
+    // Hint about missing blocks (find the next missing block in sequence)
+    if (result.missingBlocks > 0 && hints.length < 3) {
+      // Find the first missing block that should come next in the sequence
+      for (let i = 0; i < this.solutionOrder.length && hints.length < 3; i++) {
+        const blockId = this.solutionOrder[i];
+        if (!userOrder.includes(blockId) && !usedBlocks.has(blockId)) {
+          const missingBlock = this.blockMap.get(blockId);
+          if (missingBlock) {
+            hints.push({
+              type: 'missing',
+              message: `You're missing this important step:`,
+              latex: missingBlock.latex,
+              blockId: blockId
+            });
+            usedBlocks.add(blockId);
+            break; // Only suggest one missing block at a time
+          }
         }
       }
     }
 
-    // Hint about next expected block
-    if (userOrder.length < this.solutionOrder.length) {
+    // Hint about next expected block (if different from already suggested)
+    if (userOrder.length < this.solutionOrder.length && hints.length < 3) {
       const nextExpected = this.getNextExpectedBlock(userOrder);
-      if (nextExpected) {
+      if (nextExpected && !usedBlocks.has(nextExpected)) {
         const nextBlock = this.blockMap.get(nextExpected);
         if (nextBlock) {
           hints.push({
             type: 'next',
             message: `Try adding this block next:`,
-            latex: nextBlock.latex, // Include full LaTeX for rendering
+            latex: nextBlock.latex,
             blockId: nextExpected
           });
+          usedBlocks.add(nextExpected);
         }
       }
     }
 
-    return hints.slice(0, 3); // Limit to 3 hints to avoid overwhelming
+    // If we still don't have enough hints, suggest additional missing blocks
+    if (hints.length < 3 && result.missingBlocks > 0) {
+      const missingIds = this.solutionOrder.filter(id => !userOrder.includes(id) && !usedBlocks.has(id));
+      for (let i = 0; i < missingIds.length && hints.length < 3; i++) {
+        const missingBlock = this.blockMap.get(missingIds[i]);
+        if (missingBlock) {
+          hints.push({
+            type: 'missing',
+            message: `Consider this step:`,
+            latex: missingBlock.latex,
+            blockId: missingIds[i]
+          });
+          usedBlocks.add(missingIds[i]);
+        }
+      }
+    }
+
+    return hints;
   }
 
   /**
@@ -362,6 +427,51 @@ export class ProofValidator {
     if (blockCount <= 5) return 'Easy';
     if (blockCount <= 10) return 'Medium';
     return 'Hard';
+  }
+
+  /**
+   * Debug method to analyze what's happening with validation
+   * @param {Array} userOrder - Array of block IDs in user's order
+   * @returns {Object} Debug information
+   */
+  debugValidation(userOrder) {
+    const result = this._analyzeSequence(userOrder);
+    const hints = this._generateHints(result, userOrder);
+    
+    return {
+      puzzle: {
+        id: this.puzzle.id,
+        title: this.puzzle.title,
+        totalBlocks: this.solutionOrder.length,
+        solutionOrder: this.solutionOrder
+      },
+      userInput: {
+        userOrder,
+        userBlocks: userOrder.length
+      },
+      analysis: result,
+      hints,
+      validation: this.validateProof(userOrder)
+    };
+  }
+
+  /**
+   * Validates that a user order contains only valid block IDs for this puzzle
+   * @param {Array} userOrder - Array of block IDs in user's order
+   * @returns {Object} Validation result with invalid blocks identified
+   */
+  validateBlockIds(userOrder) {
+    const validBlockIds = new Set(this.puzzle.blocks.map(block => block.id));
+    const invalidBlocks = userOrder.filter(id => !validBlockIds.has(id));
+    const validBlocks = userOrder.filter(id => validBlockIds.has(id));
+    
+    return {
+      isValid: invalidBlocks.length === 0,
+      invalidBlocks,
+      validBlocks,
+      puzzleId: this.puzzle.id,
+      puzzleTitle: this.puzzle.title
+    };
   }
 }
 

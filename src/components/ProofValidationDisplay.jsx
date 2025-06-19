@@ -3,10 +3,21 @@ import ProofValidator from '../utils/ProofValidator';
 import KatexRenderer from './KatexRenderer';
 import './ProofValidationDisplay.css';
 
-const ProofValidationDisplay = ({ puzzle, proofBlocks }) => {
-  const [validator] = useState(() => new ProofValidator(puzzle));
+const ProofValidationDisplay = ({ puzzle, proofBlocks, onReset, onNextPuzzle, isLastPuzzle }) => {
+  const [validator, setValidator] = useState(() => new ProofValidator(puzzle));
   const [validationResult, setValidationResult] = useState(null);
   const [showHints, setShowHints] = useState(false);
+
+  // Update validator when puzzle changes
+  useEffect(() => {
+    setValidator(prevValidator => {
+      // Only create new validator if puzzle actually changed
+      if (prevValidator.puzzle.id !== puzzle.id) {
+        return new ProofValidator(puzzle);
+      }
+      return prevValidator;
+    });
+  }, [puzzle]);
 
   useEffect(() => {
     if (proofBlocks && proofBlocks.length > 0) {
@@ -130,14 +141,20 @@ const ProofValidationDisplay = ({ puzzle, proofBlocks }) => {
             </div>
           )}
         </div>
-      )}
-
-      {validationResult.isCorrect && (
+      )}      {validationResult.isCorrect && (
         <div className="success-actions">
-          <button className="action-button primary">
-            🎉 Try Next Puzzle
+          <button 
+            className="action-button primary" 
+            onClick={onNextPuzzle}
+            disabled={!onNextPuzzle}
+          >
+            {isLastPuzzle ? '� Start Over' : '�🎉 Try Next Puzzle'}
           </button>
-          <button className="action-button secondary">
+          <button 
+            className="action-button secondary" 
+            onClick={onReset}
+            disabled={!onReset}
+          >
             🔄 Reset & Try Again
           </button>
         </div>
