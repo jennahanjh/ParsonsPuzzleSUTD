@@ -69,7 +69,6 @@ const PuzzleDisplay = ({ puzzle }) => {
     // over.data.current?.sortable?.containerId can also give the container ID
     const overContainer = findContainer(overId) || over.id;
 
-
     if (!activeContainer || !overContainer) return;
 
     if (activeContainer === overContainer) {
