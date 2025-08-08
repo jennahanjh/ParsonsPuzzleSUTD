@@ -26,7 +26,7 @@ import {
   TOWERS_OF_HANOI
 } from '../../src/puzzles/recursionProofs.js';
 
-dotenv.config();
+dotenv.config({ path: './server/.env' });
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/parsonspuzzle';
 

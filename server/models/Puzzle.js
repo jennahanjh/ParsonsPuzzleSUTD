@@ -47,8 +47,7 @@ const puzzleSchema = new mongoose.Schema({
     required: true
   }],
   tags: [{
-    type: String,
-    index: true
+    type: String
   }],
   createdAt: {
     type: Date,
