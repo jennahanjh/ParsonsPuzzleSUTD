@@ -107,13 +107,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 2rem; /* ~32px */
   margin: 2rem 0; /* Add vertical margin and remove horizontal margin */
-  align-items: start;
+  align-items: stretch; /* Ensure equal height */
+  width: 100%; /* Explicitly set full width */
 }
 
 .puzzle-palette-container,
 .puzzle-workspace-container {
   display: flex;
   flex-direction: column;
+  width: 100%; /* Ensure each takes full available space */
+  min-width: 0; /* Allow shrinking if needed */
 }
 
 .puzzle-palette-container h3,
@@ -128,6 +131,8 @@
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.025em;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding/border in width calculation */
 }
 
 .droppable-area {
@@ -139,6 +144,8 @@
   background: var(--color-canvas-default);
   transition: all 0.3s cubic-bezier(0.3, 0, 0.5, 1);
   position: relative;
+  width: 100%; /* Ensure full width within container */
+  box-sizing: border-box; /* Include padding/border in width calculation */
 }
 
 .puzzle-palette-container .droppable-area {
@@ -228,6 +235,12 @@
     grid-template-columns: 1fr;
     gap: 1.5rem; /* ~24px */
     margin: 1.5rem 0; /* Adjust vertical margin for mobile */
+    width: 100%; /* Maintain full width on mobile */
+  }
+
+  .puzzle-palette-container,
+  .puzzle-workspace-container {
+    width: 100%; /* Ensure full width on mobile */
   }
 
   .puzzle-header {
