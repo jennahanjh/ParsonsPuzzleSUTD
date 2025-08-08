@@ -37,14 +37,13 @@ const UnifiedControlPanel = ({
         </div>
         
         <div className={styles.controlPanelActions}>
-          {/* ErrorTooltip now positioned absolutely */}
+          {/* Error indicator will be positioned here via CSS */}
         </div>
       </div>
       
       <ErrorTooltip 
         error={puzzlesError}
         show={puzzlesError && !useLocalData}
-        containerMode={true}
       />
     </div>
   );

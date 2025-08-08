@@ -1,16 +1,11 @@
 /* Error tooltip system */
 .errorTooltipWrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* Container wrapper - positions tooltip absolutely in top-right */
-.errorTooltipContainerWrapper {
   position: absolute;
-  top: var(--padding-xl, 18px);
-  right: 24px;
-  z-index: 1001;
+  top: 50%;
+  right: 24px; /* Align with panel padding */
+  transform: translateY(-50%);
   display: inline-block;
+  z-index: 1001;
 }
 
 .errorIndicator {
@@ -70,8 +65,7 @@
   pointer-events: none;
 }
 
-.errorTooltipWrapper:hover .errorTooltip,
-.errorTooltipContainerWrapper:hover .errorTooltip {
+.errorTooltipWrapper:hover .errorTooltip {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
@@ -118,33 +112,10 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .errorTooltip {
-    right: -50px;
-    width: 280px;
-    left: auto;
+  .errorTooltipWrapper {
+    right: 18px; /* Adjust for smaller padding on mobile */
   }
   
-  .errorTooltipArrow {
-    right: 60px;
-  }
-}
-
-.errorTooltipContent {
-  padding: 12px 16px;
-  color: var(--color-fg-default);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.errorTooltipContent strong {
-  color: var(--color-danger-fg);
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
   .errorTooltip {
     right: -50px;
     width: 280px;
