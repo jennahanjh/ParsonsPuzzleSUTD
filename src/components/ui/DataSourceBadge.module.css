@@ -1,16 +1,18 @@
-/* Status badge styling */
+/* Status badge styling - Extends shared badge pattern */
 .statusBadge {
-  padding: 6px 14px;
-  border-radius: 20px;
+  /* Inherit shared badge styles */
+  padding: var(--padding-xs, 6px 14px);
+  border-radius: var(--radius-xl, 20px);
   font-weight: 500;
-  font-size: 13px;
+  font-size: var(--text-base, 13px);
   border: 1px solid;
-  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  transition: var(--transition-smooth, all 0.2s cubic-bezier(0.3, 0, 0.5, 1));
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--gap-sm, 6px);
 }
 
+/* State variants */
 .statusBadge.api {
   background-color: rgba(63, 185, 80, 0.15);
   color: var(--color-success-fg);
@@ -26,7 +28,7 @@
 /* Interactive hover effects */
 .statusBadge:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
 .statusBadge.api:hover {

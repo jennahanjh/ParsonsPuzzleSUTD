@@ -1,35 +1,38 @@
-/* Puzzle selector styling */
+/* Puzzle selector styling - Reusable form control pattern */
 .puzzleSelector {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--gap-md, 0.5rem);
 }
 
 .puzzleSelector.compact {
-  gap: 8px;
+  gap: var(--gap-sm, 8px);
 }
 
+/* Label styling - reusable pattern */
 .puzzleSelector label,
 .puzzleSelector.compact label {
   font-weight: 600;
   color: var(--color-fg-default);
-  font-size: 14px;
+  font-size: var(--text-md, 14px);
   white-space: nowrap;
 }
 
+/* Select styling - reusable form control */
 .puzzleSelector select,
 .puzzleSelector.compact select {
-  padding: 8px 12px;
+  padding: var(--padding-sm, 8px 12px);
   border: 1px solid var(--color-border-default);
-  border-radius: 6px;
+  border-radius: var(--radius-sm, 6px);
   background: var(--color-canvas-default);
   color: var(--color-fg-default);
-  font-size: 14px;
+  font-size: var(--text-md, 14px);
   min-width: 280px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  transition: var(--transition-smooth, all 0.2s cubic-bezier(0.3, 0, 0.5, 1));
 }
 
+/* Interactive states - consolidated */
 .puzzleSelector select:focus,
 .puzzleSelector.compact select:focus {
   outline: 2px solid var(--color-accent-fg);
@@ -47,7 +50,7 @@
 @media (max-width: 768px) {
   .puzzleSelector.compact {
     flex-direction: column;
-    gap: 8px;
+    gap: var(--gap-sm, 8px);
     text-align: center;
   }
   

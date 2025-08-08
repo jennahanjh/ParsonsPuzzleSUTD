@@ -1,0 +1,154 @@
+/* Shared CSS Variables and Mixins */
+:root {
+  /* Timing Functions */
+  --transition-smooth: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  --transition-fast: all 0.1s cubic-bezier(0.3, 0, 0.5, 1);
+  
+  /* Common Spacing */
+  --gap-xs: 4px;
+  --gap-sm: 8px;
+  --gap-md: 12px;
+  --gap-lg: 16px;
+  --gap-xl: 20px;
+  
+  /* Common Padding */
+  --padding-xs: 6px 8px;
+  --padding-sm: 8px 12px;
+  --padding-md: 8px 16px;
+  --padding-lg: 12px 16px;
+  --padding-xl: 18px 24px;
+  
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  
+  /* Font Sizes */
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  
+  /* Common Box Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Component Heights */
+  --input-height: 32px;
+  --button-height: 32px;
+  --indicator-size: 28px;
+}
+
+/* Common Utility Classes */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Common Interactive States */
+.interactive {
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.interactive:hover {
+  transform: translateY(-1px);
+}
+
+.interactive:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
+}
+
+.interactive:focus {
+  outline: 2px solid var(--color-accent-fg);
+  outline-offset: 2px;
+}
+
+/* Common Badge/Status Styles */
+.status-badge {
+  padding: var(--padding-xs);
+  border-radius: var(--radius-xl);
+  font-weight: 500;
+  font-size: var(--text-base);
+  border: 1px solid;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.status-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Common Button Base */
+.btn-base {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid;
+  transition: var(--transition-smooth);
+  text-align: center;
+}
+
+.btn-base:hover {
+  transform: translateY(-1px);
+}
+
+.btn-base:active {
+  transform: translateY(0);
+  transition: var(--transition-fast);
+}
+
+.btn-base:focus {
+  outline: 2px solid var(--color-accent-fg);
+  outline-offset: 2px;
+}
+
+/* Common Compact Variant */
+.compact {
+  padding: var(--padding-sm);
+  font-size: var(--text-base);
+  white-space: nowrap;
+  justify-content: center;
+}
+
+/* Common Responsive Breakpoints */
+@media (max-width: 768px) {
+  .mobile-center {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .mobile-stack {
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+}

@@ -2,7 +2,6 @@ import React from 'react';
 import { PuzzleDisplay, UnifiedControlPanel, LoadingState } from './components';
 import { useAppState } from './hooks/useAppState';
 import './App.css';
-import './styles/legacy-api.css';
 
 function App() {
   const {

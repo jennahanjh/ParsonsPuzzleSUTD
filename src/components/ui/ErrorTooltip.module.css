@@ -7,8 +7,8 @@
 /* Container wrapper - positions tooltip absolutely in top-right */
 .errorTooltipContainerWrapper {
   position: absolute;
-  top: 18px; /* Match UnifiedControlPanel padding */
-  right: 24px; /* Match UnifiedControlPanel padding */
+  top: var(--padding-xl, 18px);
+  right: 24px;
   z-index: 1001;
   display: inline-block;
 }
@@ -17,15 +17,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: var(--indicator-size, 28px);
+  height: var(--indicator-size, 28px);
   cursor: pointer;
   border-radius: 50%;
   background-color: rgba(248, 81, 73, 0.15);
   border: 1px solid var(--color-danger-emphasis);
-  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  transition: var(--transition-smooth, all 0.2s cubic-bezier(0.3, 0, 0.5, 1));
   animation: pulseWarning 2s infinite;
-  /* Icon styling */
   color: var(--color-danger-emphasis);
 }
 
@@ -56,18 +55,18 @@
   position: absolute;
   bottom: 100%;
   right: 0;
-  margin-bottom: 12px;
+  margin-bottom: var(--gap-md, 12px);
   width: 300px;
   max-width: calc(100vw - 40px);
   background-color: var(--color-canvas-subtle);
   border: 1px solid var(--color-danger-emphasis);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(248, 81, 73, 0.2);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(0, 0, 0, 0.3)), 0 4px 16px rgba(248, 81, 73, 0.2);
   z-index: 10000;
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px) scale(0.95);
-  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  transition: var(--transition-smooth, all 0.2s cubic-bezier(0.3, 0, 0.5, 1));
   pointer-events: none;
 }
 
@@ -79,10 +78,11 @@
   pointer-events: auto;
 }
 
+/* Tooltip Arrow - Reusable Pattern */
 .errorTooltipArrow {
   position: absolute;
   top: 100%;
-  right: 6px; /* Center arrow on 28px circle: 28/2 - 8px arrow width/2 = 6px from right */
+  right: 6px; /* Center on 28px circle: 14px - 8px = 6px */
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
@@ -100,6 +100,33 @@
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-top: 7px solid var(--color-canvas-subtle);
+}
+
+.errorTooltipContent {
+  padding: var(--padding-lg, 12px 16px);
+  color: var(--color-fg-default);
+  font-size: var(--text-base, 13px);
+  line-height: 1.4;
+}
+
+.errorTooltipContent strong {
+  color: var(--color-danger-fg);
+  display: block;
+  margin-bottom: var(--gap-sm, 6px);
+  font-size: var(--text-md, 14px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .errorTooltip {
+    right: -50px;
+    width: 280px;
+    left: auto;
+  }
+  
+  .errorTooltipArrow {
+    right: 60px;
+  }
 }
 
 .errorTooltipContent {

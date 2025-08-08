@@ -1,3 +1,6 @@
+/* Import shared CSS variables and utilities */
+@import './styles/shared.css';
+
 :root {
   /* GitHub Dark Theme Color Palette */
   --color-canvas-default: #0d1117;
