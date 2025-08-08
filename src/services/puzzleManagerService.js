@@ -76,7 +76,7 @@ class PuzzleManagerService {
       return data.puzzles || [];
       
     } catch (error) {
-      console.warn('Could not fetch from server, falling back to localStorage');
+      console.warn('Could not fetch from server, falling back to localStorage:', error.message);
       return this.getEducatorPuzzlesFromLocalStorage();
     }
   }
@@ -96,7 +96,7 @@ class PuzzleManagerService {
       return data.puzzles || [];
       
     } catch (error) {
-      console.warn('Could not fetch from server, falling back to localStorage');
+      console.warn('Could not fetch from server, falling back to localStorage:', error.message);
       return this.getStoredPuzzles(category).puzzles;
     }
   }
@@ -206,46 +206,78 @@ class PuzzleManagerService {
    */
   async getStatistics() {
     try {
+      // Try to fetch from server first
+      const response = await fetch(`${this.baseUrl}/puzzles/stats/summary`);
+      
+      if (response.ok) {
+        const serverStats = await response.json();
+        
+        // Transform server response to match expected format
+        const categories = Object.keys(serverStats.categoryCounts || {});
+        
+        return {
+          totalPuzzles: serverStats.total || 0,
+          categories: categories.length,
+          byDifficulty: this.calculateDifficultyStats(await this.getAllPuzzles()),
+          byCategory: this.transformCategoryStats(serverStats.categoryCounts || {})
+        };
+      }
+      
+      // If server request fails, fall back to client-side calculation
       const puzzles = await this.getAllPuzzles();
-      const categories = new Set(puzzles.map(p => p.category));
-      const difficultyCount = puzzles.reduce((acc, puzzle) => {
-        acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
-        return acc;
-      }, {});
-
-      return {
-        totalPuzzles: puzzles.length,
-        categories: categories.size,
-        byDifficulty: difficultyCount,
-        byCategory: puzzles.reduce((acc, puzzle) => {
-          const categoryName = this.getCategoryDisplayName(puzzle.category);
-          acc[categoryName] = (acc[categoryName] || 0) + 1;
-          return acc;
-        }, {})
-      };
+      return this.calculateStatsFromPuzzles(puzzles);
+      
     } catch (error) {
       console.warn('Using localStorage for statistics:', error.message);
       // Fallback to localStorage
       const puzzles = this.getEducatorPuzzlesFromLocalStorage();
-      const categories = new Set(puzzles.map(p => p.categoryName));
-      const difficultyCount = puzzles.reduce((acc, puzzle) => {
-        acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
-        return acc;
-      }, {});
-
-      return {
-        totalPuzzles: puzzles.length,
-        categories: categories.size,
-        byDifficulty: difficultyCount,
-        byCategory: puzzles.reduce((acc, puzzle) => {
-          acc[puzzle.categoryName] = (acc[puzzle.categoryName] || 0) + 1;
-          return acc;
-        }, {})
-      };
+      return this.calculateStatsFromPuzzles(puzzles);
     }
   }
 
   /**
+   * Calculate statistics from puzzle array
+   */
+  calculateStatsFromPuzzles(puzzles) {
+    const categories = new Set(puzzles.map(p => p.category || p.categoryName));
+    const difficultyCount = puzzles.reduce((acc, puzzle) => {
+      acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
+      return acc;
+    }, {});
+
+    return {
+      totalPuzzles: puzzles.length,
+      categories: categories.size,
+      byDifficulty: difficultyCount,
+      byCategory: puzzles.reduce((acc, puzzle) => {
+        const categoryName = puzzle.categoryName || this.getCategoryDisplayName(puzzle.category);
+        acc[categoryName] = (acc[categoryName] || 0) + 1;
+        return acc;
+      }, {})
+    };
+  }
+
+  /**
+   * Calculate difficulty statistics from puzzles
+   */
+  calculateDifficultyStats(puzzles) {
+    return puzzles.reduce((acc, puzzle) => {
+      acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
+      return acc;
+    }, {});
+  }
+
+  /**
+   * Transform server category stats to display format
+   */
+  transformCategoryStats(categoryCounts) {
+    const transformed = {};
+    for (const [category, count] of Object.entries(categoryCounts)) {
+      const displayName = this.getCategoryDisplayName(category);
+      transformed[displayName] = count;
+    }
+    return transformed;
+  }  /**
    * Get display name for category
    */
   getCategoryDisplayName(category) {

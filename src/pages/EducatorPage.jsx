@@ -22,9 +22,23 @@ function EducatorPage() {
     loadStatistics();
   }, []);
 
-  const loadStatistics = () => {
-    const stats = puzzleManagerService.getStatistics();
-    setStatistics(stats);
+  const loadStatistics = async () => {
+    try {
+      setIsLoading(true);
+      const stats = await puzzleManagerService.getStatistics();
+      setStatistics(stats);
+    } catch (error) {
+      console.error('Failed to load statistics:', error);
+      // Set default statistics on error
+      setStatistics({
+        totalPuzzles: 0,
+        categories: 0,
+        byDifficulty: {},
+        byCategory: {}
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCreatePuzzle = (category = 'big-o') => {
