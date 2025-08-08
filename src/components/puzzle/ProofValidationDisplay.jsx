@@ -148,7 +148,7 @@ const ProofValidationDisplay = ({ puzzle, proofBlocks, onReset, onNextPuzzle, is
             onClick={onNextPuzzle}
             disabled={!onNextPuzzle}
           >
-            {isLastPuzzle ? '� Start Over' : '�🎉 Try Next Puzzle'}
+            {isLastPuzzle ? '🔄 Start Over' : '🎉 Try Next Puzzle'}
           </button>
           <button 
             className="action-button secondary" 

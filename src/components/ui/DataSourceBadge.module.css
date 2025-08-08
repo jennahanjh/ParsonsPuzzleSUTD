@@ -5,7 +5,7 @@
   border-radius: var(--radius-xl, 1.25rem);
   font-weight: 500;
   font-size: var(--text-base, 0.8125rem);
-  border: 0.0625rem solid; /* ~1px */
+  border: var(--border-thin, 0.0625rem) solid;
   transition: var(--transition-smooth, all 0.2s cubic-bezier(0.3, 0, 0.5, 1));
   display: inline-flex;
   align-items: center;

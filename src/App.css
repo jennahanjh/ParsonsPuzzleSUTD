@@ -8,13 +8,13 @@
 .container {
   max-width: 87.5rem; /* ~1400px at 16px base */
   margin: 0 auto;
-  padding: 1.25rem; /* ~20px */
+  padding: var(--margin-xl, 1.5rem);
 }
 
 .App-header {
   padding: 2rem 0;
-  border-bottom: 0.0625rem solid #30363d; /* ~1px */
-  margin-bottom: 2rem;
+  border-bottom: var(--border-thin, 0.0625rem) solid #30363d;
+  margin-bottom: var(--margin-2xl, 2rem);
 }
 
 .App-header h1 {
@@ -31,15 +31,15 @@
 }
 
 .puzzle-nav {
-  margin-bottom: 2rem;
-  padding: 1rem;
+  margin-bottom: var(--margin-2xl, 2rem);
+  padding: var(--padding-lg, 0.75rem 1rem);
   background: #161b22;
-  border: 0.0625rem solid #30363d; /* ~1px */
-  border-radius: 0.5rem; /* ~8px */
+  border: var(--border-thin, 0.0625rem) solid #30363d;
+  border-radius: var(--radius-md, 0.5rem);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: var(--gap-lg, 1rem);
 }
 
 .puzzle-selector {

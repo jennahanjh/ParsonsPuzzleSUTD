@@ -1,9 +1,9 @@
 .validation-display {
   background: #2c2c2c;
-  border: 2px solid #444;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 20px;
+  border: var(--border-medium, 0.125rem) solid #444;
+  border-radius: var(--radius-md, 0.5rem);
+  padding: var(--padding-xl, 1.125rem 1.5rem);
+  margin-top: var(--margin-xl, 1.5rem);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   color: #fff;
   transition: all 0.3s ease;
@@ -34,13 +34,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem; /* ~15px */
 }
 
 .score-section {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem; /* ~10px */
 }
 
 .score-emoji {
@@ -60,8 +60,8 @@
 .status {
   font-size: 1.2em;
   font-weight: bold;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: var(--padding-md, 0.5rem 1rem);
+  border-radius: var(--radius-xl, 1.25rem);
 }
 
 .status.correct {
@@ -75,7 +75,7 @@
 }
 
 .validation-feedback {
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem; /* ~15px */
 }
 
 .feedback-text {
@@ -85,19 +85,19 @@
 }
 
 .validation-details {
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem; /* ~15px */
 }
 
 .detail-stats {
   display: flex;
-  gap: 20px;
+  gap: 1.25rem; /* ~20px */
   flex-wrap: wrap;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem; /* ~4px */
 }
 
 .stat-label {
@@ -121,15 +121,15 @@
 }
 
 .hints-section {
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem; /* ~15px */
 }
 
 .hints-toggle {
   background: #444;
   color: #fff;
-  border: 1px solid #666;
-  border-radius: 6px;
-  padding: 10px 15px;
+  border: var(--border-thin, 0.0625rem) solid #666;
+  border-radius: var(--radius-sm, 0.375rem);
+  padding: var(--padding-sm, 0.5rem 0.75rem);
   cursor: pointer;
   font-size: 1em;
   transition: background-color 0.2s ease;
@@ -140,17 +140,17 @@
 }
 
 .hints-list {
-  margin-top: 10px;
+  margin-top: 0.625rem; /* ~10px */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem; /* ~12px */
 }
 
 .hint {
   background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border-radius: 8px;
-  border-left: 4px solid #666;
+  padding: var(--padding-lg, 0.75rem 1rem);
+  border-radius: var(--radius-md, 0.5rem);
+  border-left: var(--border-thick, 0.25rem) solid #666;
 }
 
 .hint-position {
@@ -168,8 +168,8 @@
 .hint-header {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 0.625rem; /* ~10px */
+  margin-bottom: 0.625rem; /* ~10px */
 }
 
 .hint-icon {
@@ -186,10 +186,10 @@
 
 .hint-latex {
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid #555;
-  border-radius: 6px;
-  padding: 12px 15px;
-  margin-top: 8px;
+  border: 0.0625rem solid #555; /* ~1px */
+  border-radius: 0.375rem; /* ~6px */
+  padding: 0.75rem 0.9375rem; /* ~12px 15px */
+  margin-top: 0.5rem; /* ~8px */
   
   /* Ensure KaTeX renders properly */
   overflow-x: auto;
@@ -221,17 +221,17 @@
 
 .success-actions {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem; /* ~10px */
   justify-content: center;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #444;
+  margin-top: 1.25rem; /* ~20px */
+  padding-top: 1.25rem; /* ~20px */
+  border-top: 0.0625rem solid #444; /* ~1px */
 }
 
 .action-button {
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem; /* ~12px 24px */
   border: none;
-  border-radius: 6px;
+  border-radius: 0.375rem; /* ~6px */
   font-size: 1em;
   font-weight: 500;
   cursor: pointer;
@@ -245,13 +245,13 @@
 
 .action-button.primary:hover {
   background: #45a049;
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem); /* ~-2px */
 }
 
 .action-button.secondary {
   background: transparent;
   color: #aaa;
-  border: 1px solid #666;
+  border: 0.0625rem solid #666; /* ~1px */
 }
 
 .action-button.secondary:hover {
@@ -278,12 +278,12 @@
 
   .action-button {
     width: 100%;
-    max-width: 250px;
+    max-width: 15.625rem; /* ~250px */
   }
 
   .hint-header {
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem; /* ~8px */
   }
 
   .hint-latex {
@@ -299,7 +299,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-0.625rem); /* ~-10px */
   }
   to {
     opacity: 1;
@@ -309,23 +309,23 @@
 
 /* Scrollable hint content for very long LaTeX */
 .hint-latex {
-  max-height: 200px;
+  max-height: 12.5rem; /* ~200px */
   overflow-y: auto;
 }
 
 /* Custom scrollbar for hint latex */
 .hint-latex::-webkit-scrollbar {
-  width: 6px;
+  width: 0.375rem; /* ~6px */
 }
 
 .hint-latex::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  border-radius: 0.1875rem; /* ~3px */
 }
 
 .hint-latex::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+  border-radius: 0.1875rem; /* ~3px */
 }
 
 .hint-latex::-webkit-scrollbar-thumb:hover {

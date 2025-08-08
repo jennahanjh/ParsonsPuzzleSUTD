@@ -29,16 +29,33 @@
   --text-sm: 0.75rem;     /* ~12px */
   --text-base: 0.8125rem; /* ~13px */
   --text-md: 0.875rem;    /* ~14px */
+  --text-lg: 1rem;        /* ~16px */
+  --text-xl: 1.125rem;    /* ~18px */
   
   /* Common Box Shadows - using rem for blur radius */
+  --shadow-xs: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05);       /* 0 1px 2px */
   --shadow-sm: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12);      /* 0 1px 3px */
   --shadow-md: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);          /* 0 4px 12px */
   --shadow-lg: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);               /* 0 8px 32px */
+  --shadow-xl: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.4);          /* 0 20px 50px */
   
   /* Component Heights - relative to font size */
   --input-height: 2rem;      /* ~32px */
   --button-height: 2rem;     /* ~32px */
   --indicator-size: 1.75rem; /* ~28px */
+  
+  /* Common Margins - relative to base font size */
+  --margin-xs: 0.25rem;   /* ~4px */
+  --margin-sm: 0.5rem;    /* ~8px */
+  --margin-md: 0.75rem;   /* ~12px */
+  --margin-lg: 1rem;      /* ~16px */
+  --margin-xl: 1.5rem;    /* ~24px */
+  --margin-2xl: 2rem;     /* ~32px */
+  
+  /* Border Width - relative units */
+  --border-thin: 0.0625rem;  /* ~1px */
+  --border-medium: 0.125rem; /* ~2px */
+  --border-thick: 0.25rem;   /* ~4px */
 }
 
 /* Common Utility Classes */
