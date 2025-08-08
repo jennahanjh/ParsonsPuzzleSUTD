@@ -1,68 +1,56 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import Puzzle from '../models/Puzzle.js';
 
-// Import existing puzzle data
-import { 
-  N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED,
-  LOG_N_IS_O_N,
-  N_LOG_N_IS_O_N_SQUARED,
-  TWO_TO_N_IS_NOT_O_N_CUBED
-} from '../../src/puzzles/bigOProofs.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-import {
-  SUM_OF_FIRST_N_INTEGERS,
-  SUM_OF_POWERS_OF_TWO,
-  DIVISIBILITY_BY_THREE
-} from '../../src/puzzles/inductionProofs.js';
-
-import {
-  DISTRIBUTIVE_LAW_SETS,
-  DE_MORGAN_LAW
-} from '../../src/puzzles/setTheoryProofs.js';
-
-import {
-  FIBONACCI_RECURSION,
-  TOWERS_OF_HANOI
-} from '../../src/puzzles/recursionProofs.js';
-
-dotenv.config({ path: './server/.env' });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/parsonspuzzle';
 
-// Define puzzle categories and their data
-const puzzleCategories = {
-  bigO: [
-    N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED,
-    LOG_N_IS_O_N,
-    N_LOG_N_IS_O_N_SQUARED,
-    TWO_TO_N_IS_NOT_O_N_CUBED
-  ],
-  induction: [
-    SUM_OF_FIRST_N_INTEGERS,
-    SUM_OF_POWERS_OF_TWO,
-    DIVISIBILITY_BY_THREE
-  ],
-  setTheory: [
-    DISTRIBUTIVE_LAW_SETS,
-    DE_MORGAN_LAW
-  ],
-  recursion: [
-    FIBONACCI_RECURSION,
-    TOWERS_OF_HANOI
-  ]
-};
+// Function to load JSON puzzle data
+function loadPuzzleData() {
+  const puzzleDataPath = path.join(__dirname, '../../src/puzzles/data');
+  
+  const bigOData = JSON.parse(fs.readFileSync(path.join(puzzleDataPath, 'big-o-proofs.json'), 'utf8'));
+  const inductionData = JSON.parse(fs.readFileSync(path.join(puzzleDataPath, 'induction-proofs.json'), 'utf8'));
+  const setTheoryData = JSON.parse(fs.readFileSync(path.join(puzzleDataPath, 'set-theory-proofs.json'), 'utf8'));
+  const recursionData = JSON.parse(fs.readFileSync(path.join(puzzleDataPath, 'recursion-proofs.json'), 'utf8'));
 
-// Function to determine difficulty based on puzzle characteristics
+  return {
+    bigO: bigOData.puzzles,
+    induction: inductionData.puzzles,
+    setTheory: setTheoryData.puzzles,
+    recursion: recursionData.puzzles
+  };
+}
+
+// Function to determine difficulty based on puzzle characteristics (fallback if not provided)
 function determineDifficulty(puzzle) {
+  // If difficulty is already provided in JSON, use it
+  if (puzzle.difficulty) {
+    return puzzle.difficulty;
+  }
+  
+  // Otherwise, determine based on block count
   const blockCount = puzzle.blocks.length;
   if (blockCount <= 5) return 'easy';
   if (blockCount <= 10) return 'medium';
   return 'hard';
 }
 
-// Function to generate tags based on puzzle content
+// Function to generate tags based on puzzle content (fallback if not provided)
 function generateTags(puzzle, category) {
+  // If tags are already provided in JSON, use them with category
+  if (puzzle.tags && Array.isArray(puzzle.tags)) {
+    return [...new Set([category, ...puzzle.tags])]; // Ensure category is included and remove duplicates
+  }
+  
+  // Otherwise, generate based on content
   const tags = [category];
   
   // Add tags based on title and content
@@ -96,8 +84,28 @@ function generateTags(puzzle, category) {
 async function migratePuzzles() {
   try {
     console.log('Connecting to MongoDB...');
-    await mongoose.connect(MONGODB_URI);
+    console.log(`Platform: ${process.platform}`);
+    
+    // Connection options similar to the main server
+    const connectionOptions = {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
+      maxPoolSize: 10
+    };
+    
+    // Add TLS options for Windows/Atlas
+    if (MONGODB_URI.includes('mongodb+srv') || process.platform === 'win32') {
+      connectionOptions.tls = true;
+      connectionOptions.tlsAllowInvalidCertificates = true;
+    }
+    
+    await mongoose.connect(MONGODB_URI, connectionOptions);
     console.log('Connected to MongoDB successfully!');
+    
+    // Load puzzle data from JSON files
+    console.log('Loading puzzle data from JSON files...');
+    const puzzleCategories = loadPuzzleData();
     
     // Clear existing puzzles (optional - uncomment if you want to start fresh)
     // console.log('Clearing existing puzzles...');
@@ -192,9 +200,10 @@ async function migratePuzzles() {
 }
 
 // Run migration if this script is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && process.argv[1].endsWith('migratePuzzles.js')) {
+  console.log('Starting migration...');
   migratePuzzles().then(() => {
-    console.log('Migration completed!');
+    console.log('Migration completed successfully!');
     process.exit(0);
   }).catch((error) => {
     console.error('Migration failed:', error);
