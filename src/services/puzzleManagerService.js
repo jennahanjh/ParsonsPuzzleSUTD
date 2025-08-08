@@ -1,62 +1,129 @@
-// Service for managing puzzle data and saving to JSON files
+// Service for managing puzzle data with server integration
 class PuzzleManagerService {
   constructor() {
-    this.apiEnabled = false; // For now, we'll work with local storage and file downloads
+    this.apiEnabled = true;
+    this.baseUrl = 'http://localhost:5000/api';
   }
 
   /**
-   * Save a new puzzle to the appropriate category file
-   * Since we can't write directly to files in the browser, this will:
-   * 1. Store in localStorage for immediate use
-   * 2. Provide download functionality for the updated JSON file
+   * Save a new puzzle to the server database
+   * This provides immediate availability to students
    */
   async savePuzzle(puzzle) {
     try {
       // Validate puzzle data
       this.validatePuzzle(puzzle);
 
-      // Determine the target file based on category
-      const categoryMap = {
-        'big-o': 'big-o-proofs.json',
-        'induction': 'induction-proofs.json',
-        'recursion': 'recursion-proofs.json',
-        'set-theory': 'set-theory-proofs.json'
-      };
+      // Send to server
+      const response = await fetch(`${this.baseUrl}/puzzles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(puzzle)
+      });
 
-      const filename = categoryMap[puzzle.category];
-      if (!filename) {
-        throw new Error(`Unknown category: ${puzzle.category}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
-      // Get existing puzzles from localStorage or create new structure
-      const storageKey = `puzzles_${puzzle.category}`;
-      const existingData = this.getStoredPuzzles(puzzle.category);
-      
-      // Add the new puzzle
-      existingData.puzzles.push(puzzle);
+      const savedPuzzle = await response.json();
 
-      // Save to localStorage
-      localStorage.setItem(storageKey, JSON.stringify(existingData));
+      // Also save to localStorage as backup
+      this.saveToLocalStorage(puzzle);
 
-      // Generate download for the updated file
-      this.downloadUpdatedFile(existingData, filename);
-
-      // Return success with instructions
       return {
         success: true,
-        message: 'Puzzle created successfully! Download the updated JSON file and replace it in your project.',
-        puzzle: puzzle,
-        filename: filename
+        message: 'Puzzle created successfully! Students can see it immediately.',
+        puzzle: savedPuzzle,
+        filename: this.getCategoryFileName(puzzle.category)
       };
 
     } catch (error) {
       console.error('Error saving puzzle:', error);
+      
+      // Fallback to localStorage if server is down
+      if (error.message.includes('fetch')) {
+        console.warn('Server unavailable, saving to localStorage as fallback');
+        this.saveToLocalStorage(puzzle);
+        this.downloadUpdatedFile(this.getStoredPuzzles(puzzle.category), this.getCategoryFileName(puzzle.category));
+        
+        return {
+          success: true,
+          message: 'Server unavailable. Puzzle saved locally and downloaded as JSON file.',
+          puzzle: puzzle,
+          filename: this.getCategoryFileName(puzzle.category)
+        };
+      }
+      
       throw new Error(`Failed to save puzzle: ${error.message}`);
     }
   }
 
   /**
-   * Get stored puzzles for a category from localStorage
+   * Get all puzzles from server (for statistics and management)
+   */
+  async getAllPuzzles() {
+    try {
+      const response = await fetch(`${this.baseUrl}/puzzles?limit=1000`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch puzzles: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data.puzzles || [];
+      
+    } catch (error) {
+      console.warn('Could not fetch from server, falling back to localStorage');
+      return this.getEducatorPuzzlesFromLocalStorage();
+    }
+  }
+
+  /**
+   * Get puzzles by category from server
+   */
+  async getPuzzlesByCategory(category) {
+    try {
+      const response = await fetch(`${this.baseUrl}/puzzles/category/${category}`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch puzzles: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data.puzzles || [];
+      
+    } catch (error) {
+      console.warn('Could not fetch from server, falling back to localStorage');
+      return this.getStoredPuzzles(category).puzzles;
+    }
+  }
+
+  /**
+   * Delete a puzzle from the server
+   */
+  async deletePuzzle(puzzleId) {
+    try {
+      const response = await fetch(`${this.baseUrl}/puzzles/${puzzleId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete puzzle: ${response.status}`);
+      }
+
+      return { success: true, message: 'Puzzle deleted successfully' };
+      
+    } catch (error) {
+      console.error('Error deleting puzzle:', error);
+      throw new Error(`Failed to delete puzzle: ${error.message}`);
+    }
+  }
+
+  /**
+   * Get stored puzzles for a category from localStorage (fallback)
    */
   getStoredPuzzles(category) {
     const storageKey = `puzzles_${category}`;
@@ -93,6 +160,105 @@ class PuzzleManagerService {
   }
 
   /**
+   * Save puzzle to localStorage as backup
+   */
+  saveToLocalStorage(puzzle) {
+    const storageKey = `puzzles_${puzzle.category}`;
+    const existingData = this.getStoredPuzzles(puzzle.category);
+    existingData.puzzles.push(puzzle);
+    localStorage.setItem(storageKey, JSON.stringify(existingData));
+  }
+
+  /**
+   * Get category filename
+   */
+  getCategoryFileName(category) {
+    const categoryMap = {
+      'big-o': 'big-o-proofs.json',
+      'induction': 'induction-proofs.json',
+      'recursion': 'recursion-proofs.json',
+      'set-theory': 'set-theory-proofs.json'
+    };
+    return categoryMap[category] || `${category}-proofs.json`;
+  }
+
+  /**
+   * Get educator puzzles from localStorage (fallback)
+   */
+  getEducatorPuzzlesFromLocalStorage() {
+    const categories = ['big-o', 'induction', 'recursion', 'set-theory'];
+    const allPuzzles = [];
+    
+    for (const category of categories) {
+      const categoryData = this.getStoredPuzzles(category);
+      allPuzzles.push(...categoryData.puzzles.map(puzzle => ({
+        ...puzzle,
+        categoryName: categoryData.category,
+        filename: this.getCategoryFileName(category)
+      })));
+    }
+    
+    return allPuzzles;
+  }
+
+  /**
+   * Get statistics about puzzles
+   */
+  async getStatistics() {
+    try {
+      const puzzles = await this.getAllPuzzles();
+      const categories = new Set(puzzles.map(p => p.category));
+      const difficultyCount = puzzles.reduce((acc, puzzle) => {
+        acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
+        return acc;
+      }, {});
+
+      return {
+        totalPuzzles: puzzles.length,
+        categories: categories.size,
+        byDifficulty: difficultyCount,
+        byCategory: puzzles.reduce((acc, puzzle) => {
+          const categoryName = this.getCategoryDisplayName(puzzle.category);
+          acc[categoryName] = (acc[categoryName] || 0) + 1;
+          return acc;
+        }, {})
+      };
+    } catch (error) {
+      console.warn('Using localStorage for statistics:', error.message);
+      // Fallback to localStorage
+      const puzzles = this.getEducatorPuzzlesFromLocalStorage();
+      const categories = new Set(puzzles.map(p => p.categoryName));
+      const difficultyCount = puzzles.reduce((acc, puzzle) => {
+        acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
+        return acc;
+      }, {});
+
+      return {
+        totalPuzzles: puzzles.length,
+        categories: categories.size,
+        byDifficulty: difficultyCount,
+        byCategory: puzzles.reduce((acc, puzzle) => {
+          acc[puzzle.categoryName] = (acc[puzzle.categoryName] || 0) + 1;
+          return acc;
+        }, {})
+      };
+    }
+  }
+
+  /**
+   * Get display name for category
+   */
+  getCategoryDisplayName(category) {
+    const displayNames = {
+      'big-o': 'Big O Notation',
+      'induction': 'Mathematical Induction',
+      'recursion': 'Recursion',
+      'set-theory': 'Set Theory'
+    };
+    return displayNames[category] || category;
+  }
+
+  /**
    * Validate puzzle data structure
    */
   validatePuzzle(puzzle) {
@@ -122,6 +288,12 @@ class PuzzleManagerService {
       throw new Error(`Invalid difficulty. Must be one of: ${validDifficulties.join(', ')}`);
     }
 
+    // Validate category
+    const validCategories = ['big-o', 'induction', 'recursion', 'set-theory'];
+    if (!validCategories.includes(puzzle.category)) {
+      throw new Error(`Invalid category. Must be one of: ${validCategories.join(', ')}`);
+    }
+
     // Validate blocks structure
     for (const block of puzzle.blocks) {
       if (!block.id || !block.latex) {
@@ -141,7 +313,7 @@ class PuzzleManagerService {
   }
 
   /**
-   * Generate and trigger download of updated JSON file
+   * Generate and trigger download of updated JSON file (fallback)
    */
   downloadUpdatedFile(data, filename) {
     const jsonString = JSON.stringify(data, null, 2);
@@ -162,22 +334,40 @@ class PuzzleManagerService {
   }
 
   /**
-   * Get all puzzles created by educators (from localStorage)
+   * Export all puzzles as a single JSON file
    */
-  getEducatorPuzzles() {
-    const categories = ['big-o', 'induction', 'recursion', 'set-theory'];
-    const allPuzzles = [];
-    
-    for (const category of categories) {
-      const categoryData = this.getStoredPuzzles(category);
-      allPuzzles.push(...categoryData.puzzles.map(puzzle => ({
-        ...puzzle,
-        categoryName: categoryData.category,
-        filename: `${category}-proofs.json`
-      })));
+  async exportAllPuzzles() {
+    try {
+      const puzzles = await this.getAllPuzzles();
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        totalPuzzles: puzzles.length,
+        puzzles: puzzles
+      };
+      
+      this.downloadUpdatedFile(exportData, 'all-puzzles-export.json');
+      
+      return {
+        success: true,
+        message: 'All puzzles exported successfully!'
+      };
+    } catch (error) {
+      console.error('Export failed:', error.message);
+      // Fallback to localStorage export
+      const puzzles = this.getEducatorPuzzlesFromLocalStorage();
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        totalPuzzles: puzzles.length,
+        puzzles: puzzles
+      };
+      
+      this.downloadUpdatedFile(exportData, 'all-puzzles-export.json');
+      
+      return {
+        success: true,
+        message: 'All puzzles exported successfully (from local storage)!'
+      };
     }
-    
-    return allPuzzles;
   }
 
   /**
@@ -191,45 +381,15 @@ class PuzzleManagerService {
   }
 
   /**
-   * Export all puzzles as a single JSON file
+   * Check server connectivity
    */
-  exportAllPuzzles() {
-    const categories = ['big-o', 'induction', 'recursion', 'set-theory'];
-    const exportData = {};
-    
-    for (const category of categories) {
-      const categoryData = this.getStoredPuzzles(category);
-      exportData[category] = categoryData;
+  async checkServerStatus() {
+    try {
+      const response = await fetch(`${this.baseUrl}/puzzles?limit=1`);
+      return response.ok;
+    } catch {
+      return false;
     }
-    
-    this.downloadUpdatedFile(exportData, 'educator-puzzles-export.json');
-    
-    return {
-      success: true,
-      message: 'All puzzles exported successfully!'
-    };
-  }
-
-  /**
-   * Get statistics about educator-created puzzles
-   */
-  getStatistics() {
-    const puzzles = this.getEducatorPuzzles();
-    const categories = new Set(puzzles.map(p => p.categoryName));
-    const difficultyCount = puzzles.reduce((acc, puzzle) => {
-      acc[puzzle.difficulty] = (acc[puzzle.difficulty] || 0) + 1;
-      return acc;
-    }, {});
-
-    return {
-      totalPuzzles: puzzles.length,
-      categories: categories.size,
-      byDifficulty: difficultyCount,
-      byCategory: puzzles.reduce((acc, puzzle) => {
-        acc[puzzle.categoryName] = (acc[puzzle.categoryName] || 0) + 1;
-        return acc;
-      }, {})
-    };
   }
 }
 

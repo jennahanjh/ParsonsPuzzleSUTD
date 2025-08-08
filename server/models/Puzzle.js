@@ -33,7 +33,7 @@ const puzzleSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['bigO', 'induction', 'setTheory', 'recursion'],
+    enum: ['big-o', 'induction', 'set-theory', 'recursion'],
     index: true
   },
   difficulty: {
