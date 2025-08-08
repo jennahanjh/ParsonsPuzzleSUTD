@@ -23,7 +23,8 @@ import './PuzzleDisplay.css';
 const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {
   const [availableBlocks, setAvailableBlocks] = useState([]);
   const [proofBlocks, setProofBlocks] = useState([]);
-  const [activeId, setActiveId] = useState(null);
+  const [activeId, setActiveId] = useState(null); 
+  const [blockSelections, setBlockSelections] = useState({});
 
   useEffect(() => {
     if (puzzle && puzzle.blocks) {
@@ -31,6 +32,7 @@ const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {
       const shuffledBlocks = [...puzzle.blocks].sort(() => Math.random() - 0.5);
       setAvailableBlocks(shuffledBlocks);
       setProofBlocks([]);
+      setBlockSelections({}); // Reset selections when puzzle changes
     }
   }, [puzzle]);
 
@@ -119,12 +121,23 @@ const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {
       }
     }
   };
-  // Use useCallback to prevent re-creation on every render
+  
+  const handleSelectionChange = (blockId, varType, value) => {
+    setBlockSelections(prev => ({
+      ...prev,
+      [blockId]: {
+        ...prev[blockId],
+        [varType]: value
+      }
+    }));
+  };
+  
   const handleReset = () => {
     if (puzzle && puzzle.blocks) {
       const shuffledBlocks = [...puzzle.blocks].sort(() => Math.random() - 0.5);
       setAvailableBlocks(shuffledBlocks);
       setProofBlocks([]);
+      setBlockSelections({}); // Reset selections
     }
   };
 
@@ -199,7 +212,14 @@ const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {
             <SortableContext items={availableBlocks.map(b => b.id)} strategy={verticalListSortingStrategy} id="palette">
               <PaletteDroppable>
                 {availableBlocks.map(block => (
-                  <ProofBlock key={block.id} id={block.id} latexContent={block.latex} />
+                  <ProofBlock
+                    key={block.id}
+                    id={block.id}
+                    latexContent={block.latex}
+                    isInWorkspace={false}
+                    blockSelections={blockSelections[block.id] || {}}
+                    onSelectionChange={handleSelectionChange}
+                  />
                 ))}
                 {availableBlocks.length === 0 && (
                   <div className="empty-message">All blocks are in use</div>
@@ -215,7 +235,13 @@ const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {
                 {proofBlocks.map((block, index) => (
                   <div key={block.id} className="proof-step">
                     <span className="step-number">{index + 1}.</span>
-                    <ProofBlock id={block.id} latexContent={block.latex} />
+                    <ProofBlock
+                      id={block.id}
+                      latexContent={block.latex}
+                      isInWorkspace={true}
+                      blockSelections={blockSelections[block.id] || {}}
+                      onSelectionChange={handleSelectionChange}
+                    />
                   </div>
                 ))}
                 {proofBlocks.length === 0 && (

@@ -13,7 +13,7 @@ export const FIBONACCI_RECURSION = {
     { id: 'rec1-7', latex: 'F(3) = F(2) + F(1) = 1 + 1 = 2' },
     { id: 'rec1-8', latex: 'F(4) = F(3) + F(2) = 2 + 1 = 3' },
     { id: 'rec1-9', latex: '\\text{This generates the sequence: } 0, 1, 1, 2, 3, 5, 8, 13, \\ldots' },
-    { id: 'rec1-10', latex: '\\text{The recurrence relation holds by definition for all } n \\ge 2.' },
+    { id: 'rec1-10', latex: '\\text{The recurrence relation holds by definition for } {{quantifier}} n {{op}} 2.' },
   ],
   solutionOrder: ['rec1-1', 'rec1-2', 'rec1-3', 'rec1-4', 'rec1-5', 'rec1-6', 'rec1-7', 'rec1-8', 'rec1-9', 'rec1-10']
 };

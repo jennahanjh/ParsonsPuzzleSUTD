@@ -7,15 +7,15 @@ export const SUM_OF_FIRST_N_INTEGERS = {
     { id: 'ind1-1', latex: '\\text{Proof by induction on } n \\ge 1.' },
     { id: 'ind1-2', latex: '\\textbf{Base case: } n = 1' },
     { id: 'ind1-3', latex: '\\text{LHS: } \\sum_{i=1}^{1} i = 1' },
-    { id: 'ind1-4', latex: '\\text{RHS: } \\frac{1(1+1)}{2} = \\frac{2}{2} = 1' },
+    { id: 'ind1-4', latex: '\\text{RHS: } \\frac{1(1+1)}{2} = \\frac{2}{2} {{op}} 1' },
     { id: 'ind1-5', latex: '\\text{LHS = RHS, so the base case holds.}' },
-    { id: 'ind1-6', latex: '\\textbf{Inductive step: } \\text{Assume the statement holds for } n = k \\text{, i.e., } \\sum_{i=1}^{k} i = \\frac{k(k+1)}{2}' },
-    { id: 'ind1-7', latex: '\\text{We need to prove it holds for } n = k+1 \\text{, i.e., } \\sum_{i=1}^{k+1} i = \\frac{(k+1)(k+2)}{2}' },
+    { id: 'ind1-6', latex: '\\textbf{Inductive step: } \\text{Assume the statement holds for } n = k \\text{, i.e., } \\sum_{i=1}^{k} i {{op}} \\frac{k(k+1)}{2}' },
+    { id: 'ind1-7', latex: '\\text{We need to prove it holds for } n = k+1 \\text{, i.e., } \\sum_{i=1}^{k+1} i {{op}} \\frac{(k+1)(k+2)}{2}' },
     { id: 'ind1-8', latex: '\\text{LHS: } \\sum_{i=1}^{k+1} i = \\sum_{i=1}^{k} i + (k+1)' },
     { id: 'ind1-9', latex: '\\text{By the inductive hypothesis: } = \\frac{k(k+1)}{2} + (k+1)' },
     { id: 'ind1-10', latex: '= \\frac{k(k+1)}{2} + \\frac{2(k+1)}{2} = \\frac{k(k+1) + 2(k+1)}{2}' },
     { id: 'ind1-11', latex: '= \\frac{(k+1)(k+2)}{2} = \\text{RHS}' },
-    { id: 'ind1-12', latex: '\\text{Therefore, by mathematical induction, the statement holds for all } n \\ge 1.' },
+    { id: 'ind1-12', latex: '\\text{Therefore, by mathematical induction, the statement holds for } {{quantifier}} n {{op}} 1.' },
   ],
   solutionOrder: ['ind1-1', 'ind1-2', 'ind1-3', 'ind1-4', 'ind1-5', 'ind1-6', 'ind1-7', 'ind1-8', 'ind1-9', 'ind1-10', 'ind1-11', 'ind1-12']
 };
@@ -37,7 +37,7 @@ export const SUM_OF_POWERS_OF_TWO = {
     { id: 'ind2-9', latex: '\\text{By the inductive hypothesis: } = (2^{k+1} - 1) + 2^{k+1}' },
     { id: 'ind2-10', latex: '= 2^{k+1} - 1 + 2^{k+1} = 2 \\cdot 2^{k+1} - 1' },
     { id: 'ind2-11', latex: '= 2^{k+2} - 1 = \\text{RHS}' },
-    { id: 'ind2-12', latex: '\\text{Therefore, by mathematical induction, the statement holds for all } n \\ge 0.' },
+    { id: 'ind2-12', latex: '\\text{Therefore, by mathematical induction, the statement holds for } {{quantifier}} n {{op}} 0.' },
   ],
   solutionOrder: ['ind2-1', 'ind2-2', 'ind2-3', 'ind2-4', 'ind2-5', 'ind2-6', 'ind2-7', 'ind2-8', 'ind2-9', 'ind2-10', 'ind2-11', 'ind2-12']
 };
