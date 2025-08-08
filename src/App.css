@@ -6,7 +6,9 @@
 }
 
 .container {
-  max-width: 87.5rem; /* ~1400px at 16px base */
+  width: var(--content-width-preferred, 85%);
+  max-width: var(--content-width-max, 87.5rem);
+  min-width: var(--content-width-min, 80%);
   margin: 0 auto;
   padding: var(--margin-xl, 1.5rem);
 }
@@ -89,6 +91,11 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .container {
+    width: var(--content-width-min, 80%);
+    padding: var(--margin-lg, 1rem);
+  }
+  
   .App-header h1 {
     font-size: 2rem;
   }
