@@ -6,3 +6,4 @@ export { default as LoadingState } from './LoadingState';
 export { default as PuzzleSelector } from './PuzzleSelector';
 export { default as DictionaryModal } from './DictionaryModal';
 export { default as FloatingHelpButton } from './FloatingHelpButton';
+export { default as StatusIndicator } from './StatusIndicator';

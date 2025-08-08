@@ -1,6 +1,6 @@
 import React from 'react';
 import { PuzzleDisplay, UnifiedControlPanel, LoadingState } from './components';
-import { FloatingHelpButton } from './components/ui';
+import { FloatingHelpButton, StatusIndicator } from './components/ui';
 import { useAppState } from './hooks/useAppState';
 import './App.css';
 
@@ -69,11 +69,12 @@ function App() {
 
         <footer className="app-footer">
           <p>SUTD 50.004 Algorithms - Interactive Learning Tool</p>
-          <p className="tech-info">
-            {isUsingApi ? 'Connected to MongoDB Atlas' : 'Using local puzzle data'}
-          </p>
         </footer>
 
+        <StatusIndicator 
+          isUsingApi={isUsingApi} 
+          isLoading={isLoading || healthLoading}
+        />
         <FloatingHelpButton />
       </div>
     </div>
