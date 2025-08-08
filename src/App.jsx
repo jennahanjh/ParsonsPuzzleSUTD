@@ -1,5 +1,6 @@
 import React from 'react';
 import { PuzzleDisplay, UnifiedControlPanel, LoadingState } from './components';
+import { FloatingHelpButton } from './components/ui';
 import { useAppState } from './hooks/useAppState';
 import './App.css';
 
@@ -72,6 +73,8 @@ function App() {
             {isUsingApi ? 'Connected to MongoDB Atlas' : 'Using local puzzle data'}
           </p>
         </footer>
+
+        <FloatingHelpButton />
       </div>
     </div>
   );
