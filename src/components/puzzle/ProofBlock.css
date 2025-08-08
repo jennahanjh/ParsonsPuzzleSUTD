@@ -11,42 +11,41 @@
   transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
   user-select: none;
   overflow: hidden; /* Keep content within block boundaries */
-  overflow-wrap: anywhere; /* More aggressive wrapping than break-word */
+  overflow-wrap: break-word; /* Less aggressive wrapping - only break at word boundaries when necessary */
   word-wrap: break-word; /* Legacy support for word wrapping */
-  word-break: break-word; /* Break long words aggressively */
+  word-break: normal; /* Only break words at normal boundaries, not anywhere */
   hyphens: auto; /* Add hyphenation for better breaking */
   min-height: fit-content; /* Ensure minimum height accommodates content */
   width: 100%; /* Ensure consistent width */
   box-sizing: border-box; /* Include padding in width calculation */
   white-space: normal; /* Allow normal text flow */
   line-height: 1.5; /* Better line spacing for mixed content */
-  text-wrap: wrap; /* Modern CSS text wrapping */
 }
 
 /* Emergency fallback for extremely long content that still doesn't wrap */
 .proof-block * {
-  max-width: 100% !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
+  max-width: 100%;
+  overflow-wrap: break-word; /* Less aggressive - only break at word boundaries */
 }
 
-/* Ultra-specific fix for the long text case you showed */
+/* Specific handling for KaTeX text elements - preserve readability */
 .proof-block .katex .base .mord.text .mord,
 .proof-block .katex .katex-html .base .mord.text .mord,
 .proof-block span[class*="mord text"] span[class*="mord"] {
   white-space: normal !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
+  word-break: normal !important; /* Don't break words in the middle */
+  overflow-wrap: break-word !important; /* Only break at word boundaries when necessary */
   word-spacing: normal !important;
   font-size: inherit !important;
   display: inline !important;
   max-width: 100% !important;
 }
 
-/* Force break on any text longer than container */
+/* Ensure KaTeX content fits within container without breaking words unnecessarily */
 .proof-block .katex * {
   max-width: 100% !important;
   box-sizing: border-box !important;
+  word-break: normal !important; /* Preserve word integrity */
 }
 
 .proof-block::before {
@@ -138,8 +137,8 @@
   line-height: 1.6; /* Increased line height for better readability */
   color: var(--color-fg-default);
   max-width: 100%; /* Ensure KaTeX doesn't exceed container width */
-  overflow-wrap: anywhere; /* More aggressive wrapping for long expressions */
-  word-break: break-all; /* Break anywhere if necessary */
+  overflow-wrap: break-word; /* Break at word boundaries when necessary */
+  word-break: normal; /* Preserve word integrity */
   white-space: normal; /* Allow normal text wrapping */
   display: inline; /* Changed from inline-block to inline for better flow */
   width: auto; /* Let content determine width naturally */
@@ -149,8 +148,8 @@
 .proof-block .katex .mord.text,
 .proof-block .katex .mord.text .mord {
   white-space: normal !important; /* Override non-breaking spaces */
-  word-break: break-all !important;
-  overflow-wrap: anywhere !important;
+  word-break: normal !important; /* Don't break words in the middle */
+  overflow-wrap: break-word !important; /* Only break at word boundaries when necessary */
   word-spacing: normal !important; /* Allow normal word spacing */
 }
 
@@ -165,8 +164,8 @@
 /* Force wrapping of long mathematical expressions */
 .proof-block .katex-display,
 .proof-block .katex-html {
-  overflow-wrap: anywhere !important;
-  word-break: break-all !important;
+  overflow-wrap: break-word !important; /* Break at word boundaries when needed */
+  word-break: normal !important; /* Preserve word integrity */
   white-space: normal !important;
 }
 
@@ -174,8 +173,8 @@
 .proof-block .katex .mord.mathdefault,
 .proof-block .katex .mord.mathnormal,
 .proof-block .katex .mord.mathit {
-  word-break: break-all !important;
-  overflow-wrap: anywhere !important;
+  word-break: normal !important; /* Don't break mathematical symbols in the middle */
+  overflow-wrap: break-word !important; /* Only break at natural boundaries */
 }
 
 /* Critical fix for the specific case with long text descriptions */
@@ -183,8 +182,8 @@
 .proof-block .katex-html .mord.text,
 .proof-block .katex .mtext {
   white-space: pre-wrap !important; /* Allow wrapping while preserving some formatting */
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
+  word-break: normal !important; /* Don't break words in the middle */
+  overflow-wrap: break-word !important; /* Only break at word boundaries */
   max-width: 100% !important;
   display: inline !important;
 }
@@ -192,8 +191,8 @@
 /* Handle the katex-html container specifically */
 .proof-block .katex-html {
   white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-all !important;
+  overflow-wrap: break-word !important; /* Break at word boundaries when needed */
+  word-break: normal !important; /* Don't break words arbitrarily */
   display: inline !important;
   max-width: 100% !important;
 }
@@ -223,15 +222,15 @@
 .proof-block .katex .base {
   display: inline;
   max-width: 100%;
-  overflow-wrap: anywhere;
-  word-break: break-all;
+  overflow-wrap: break-word; /* Break at word boundaries when needed */
+  word-break: normal; /* Don't break words arbitrarily */
 }
 
 /* Allow KaTeX spans to wrap but keep inline elements together */
 .proof-block .katex .katex-html {
   white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-all;
+  overflow-wrap: break-word; /* Break at word boundaries when needed */
+  word-break: normal; /* Don't break words arbitrarily */
   display: inline;
 }
 
