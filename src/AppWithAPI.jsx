@@ -90,48 +90,66 @@ function App() {
         <header className="App-header">
           <h1>Parson's Puzzles for Math Proofs</h1>
           <p>Practice formal mathematical proofs through interactive drag-and-drop puzzles</p>
-          
-          {/* Data source indicator */}
-          <div className="data-source-indicator">
+        </header>
+
+        {/* Unified control panel */}
+        <div className="unified-control-panel">
+          <div className="control-panel-status">
+            {/* Data source indicator */}
             <span className={`status-badge ${isUsingApi ? 'api' : 'local'}`}>
               {isUsingApi ? '🌐 Database' : '💾 Local'} 
               ({puzzles.length} puzzles)
             </span>
+          </div>
+          
+          <div className="control-panel-center">
+            {/* Toggle button */}
             {!healthLoading && (
               <button 
-                className="toggle-data-source" 
+                className="toggle-data-source compact" 
                 onClick={toggleDataSource}
                 title={`Switch to ${useLocalData ? 'database' : 'local'} data`}
               >
                 {useLocalData ? 'Use Database' : 'Use Local Data'}
               </button>
             )}
+            
+            {/* Puzzle selector */}
+            <div className="puzzle-selector compact">
+              <label htmlFor="puzzle">Select Puzzle: </label>
+              <select 
+                id="puzzle"
+                value={currentPuzzle.id} 
+                onChange={handlePuzzleChange}
+              >
+                {puzzles.map(puzzle => (
+                  <option key={puzzle.id} value={puzzle.id}>
+                    {puzzle.displayTitle || cleanTitle(puzzle.title)}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           
-          {/* Error display */}
-          {puzzlesError && !useLocalData && (
-            <div className="error-banner">
-              ⚠️ Database connection issue: {puzzlesError}. Using local data.
-            </div>
-          )}
-        </header>
-
-        <nav className="puzzle-nav">
-          <div className="puzzle-selector">
-            <label htmlFor="puzzle">Select Puzzle: </label>
-            <select 
-              id="puzzle"
-              value={currentPuzzle.id} 
-              onChange={handlePuzzleChange}
-            >
-              {puzzles.map(puzzle => (
-                <option key={puzzle.id} value={puzzle.id}>
-                  {puzzle.displayTitle || cleanTitle(puzzle.title)}
-                </option>
-              ))}
-            </select>
+          <div className="control-panel-actions">
+            {/* Error tooltip trigger */}
+            {puzzlesError && !useLocalData && (
+              <div className="error-tooltip-wrapper">
+                <span className="error-indicator" title="Connection Issues">
+                  ⚠️
+                </span>
+                <div className="error-tooltip">
+                  <div className="error-tooltip-arrow"></div>
+                  <div className="error-tooltip-content">
+                    <strong>Connection Issue</strong><br />
+                    {puzzlesError}<br />
+                    Using local data instead.
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        </nav>
+        </div>
 
         <main className="main-content">
           <PuzzleDisplay 
