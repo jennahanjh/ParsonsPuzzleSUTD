@@ -42,7 +42,7 @@ function App() {
     <div className="App">
       <div className="container">
         <header className="App-header">
-          <h1>Parson's Puzzles for Math Proofs</h1>
+          <h1>Parsons Puzzles for Math Proofs</h1>
           <p>Practice formal mathematical proofs through interactive drag-and-drop puzzles</p>
         </header>
 

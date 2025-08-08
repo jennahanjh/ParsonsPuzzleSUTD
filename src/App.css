@@ -10,13 +10,13 @@
   max-width: var(--content-width-max, 87.5rem);
   min-width: var(--content-width-min, 80%);
   margin: 0 auto;
-  padding: var(--margin-xl, 1.5rem);
+  padding: var(--margin-lg, 1rem);
 }
 
 .App-header {
-  padding: 2rem 0;
+  padding: 0.5rem 0;
   border-bottom: var(--border-thin, 0.0625rem) solid #30363d;
-  margin-bottom: var(--margin-2xl, 2rem);
+  margin-bottom: var(--margin-lg, 1rem);
 }
 
 .App-header h1 {
