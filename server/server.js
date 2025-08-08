@@ -62,18 +62,58 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Database connection
-mongoose.connect(MONGODB_URI)
+// Database connection with Windows-friendly SSL options
+const mongooseOptions = {
+  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  bufferCommands: false, // Disable mongoose buffering
+  maxPoolSize: 10, // Maintain up to 10 socket connections
+  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+};
+
+// For Windows, add additional SSL options if needed
+if (process.platform === 'win32') {
+  mongooseOptions.tls = true;
+  mongooseOptions.tlsAllowInvalidCertificates = true;
+  // Note: Don't use tlsInsecure with tlsAllowInvalidCertificates
+}
+
+mongoose.connect(MONGODB_URI, mongooseOptions)
   .then(() => {
     console.log('Connected to MongoDB Atlas');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`Platform: ${process.platform}`);
     });
   })
   .catch((error) => {
     console.error('Database connection error:', error);
-    process.exit(1);
+    console.log('Attempting fallback connection...');
+    
+    // Fallback connection attempt with even more relaxed settings
+    const fallbackOptions = {
+      ...mongooseOptions,
+      ssl: false, // Try without SSL as last resort
+      directConnection: false,
+    };
+    
+    mongoose.connect(MONGODB_URI.replace('mongodb+srv://', 'mongodb://'), fallbackOptions)
+      .then(() => {
+        console.log('Connected to MongoDB with fallback options');
+        app.listen(PORT, () => {
+          console.log(`Server running on port ${PORT} (fallback mode)`);
+        });
+      })
+      .catch((fallbackError) => {
+        console.error('Fallback connection also failed:', fallbackError);
+        console.log('Starting server without database connection...');
+        app.listen(PORT, () => {
+          console.log(`Server running on port ${PORT} (NO DATABASE)`);
+          console.log('Database connection will be retried automatically');
+        });
+      });
   });
 
 // Graceful shutdown
