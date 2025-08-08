@@ -132,31 +132,94 @@
   padding: 2px 4px;
 }
 
-/* Dropdown styling */
+/* Dropdown styling - Base styles for all dropdowns */
+.proof-block select,
+select.dropdown-op,
+select.dropdown-quantifier,
+select.dropdown-set,
+select.dropdown-setop,
+select.dropdown-logic,
+select.dropdown-complexity {
+  margin: 0 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  
+  /* Dark theme base styling */
+  background-color: var(--color-canvas-subtle);
+  color: var(--color-fg-default);
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--color-primer-shadow-inset);
+}
+
+/* Hover and focus states */
+.proof-block select:hover,
+select.dropdown-op:hover,
+select.dropdown-quantifier:hover,
+select.dropdown-set:hover,
+select.dropdown-setop:hover,
+select.dropdown-logic:hover,
+select.dropdown-complexity:hover {
+  background-color: var(--color-canvas-default);
+  border-color: var(--color-border-subtle);
+}
+
+.proof-block select:focus,
+select.dropdown-op:focus,
+select.dropdown-quantifier:focus,
+select.dropdown-set:focus,
+select.dropdown-setop:focus,
+select.dropdown-logic:focus,
+select.dropdown-complexity:focus {
+  outline: 2px solid var(--color-accent-fg);
+  outline-offset: -2px;
+  border-color: var(--color-accent-fg);
+  background-color: var(--color-canvas-default);
+}
+
+/* Type-specific accent colors */
 .dropdown-op {
-  background: #e8f4fd;
-  border-color: #3498db;
+  border-color: var(--color-accent-fg);
+  background-color: var(--color-accent-subtle);
 }
 
 .dropdown-quantifier {
-  background: #f0f9e8;
-  border-color: #27ae60;
+  border-color: var(--color-success-fg);
+  background-color: var(--color-success-emphasis);
+  background-color: rgba(63, 185, 80, 0.15);
 }
 
 .dropdown-set,
 .dropdown-setop {
-  background: #fef5e7;
-  border-color: #f39c12;
+  border-color: var(--color-attention-fg);
+  background-color: rgba(210, 153, 34, 0.15);
 }
 
 .dropdown-logic {
-  background: #f4e8fd;
-  border-color: #9b59b6;
+  border-color: #a855f7;
+  background-color: rgba(168, 85, 247, 0.15);
 }
 
 .dropdown-complexity {
-  background: #fdeaea;
-  border-color: #e74c3c;
+  border-color: var(--color-danger-fg);
+  background-color: rgba(248, 81, 73, 0.15);
+}
+
+/* Option styling for better contrast */
+.proof-block select option,
+select.dropdown-op option,
+select.dropdown-quantifier option,
+select.dropdown-set option,
+select.dropdown-setop option,
+select.dropdown-logic option,
+select.dropdown-complexity option {
+  background-color: var(--color-canvas-subtle);
+  color: var(--color-fg-default);
+  padding: 4px 8px;
 }
 
 /* Responsive design */
@@ -168,6 +231,19 @@
   
   .proof-block .katex {
     font-size: 1em;
+  }
+  
+  /* Make dropdowns more touch-friendly on mobile */
+  .proof-block select,
+  select.dropdown-op,
+  select.dropdown-quantifier,
+  select.dropdown-set,
+  select.dropdown-setop,
+  select.dropdown-logic,
+  select.dropdown-complexity {
+    padding: 6px 10px;
+    font-size: 14px;
+    min-height: 32px; /* Better touch targets */
   }
 }
 

@@ -8,17 +8,9 @@ const KatexRenderer = ({ latex, variables = {}, onVariableChange, isInteractive 
     const varType = uniqueKey.split('_')[0]; // Extract type from unique key
     const options = getDropdownOptions(varType);
     const select = document.createElement('select');
+    
+    // Use CSS classes for styling instead of inline styles
     select.className = `dropdown-${varType}`;
-    select.style.cssText = `
-      margin: 0 4px;
-      padding: 2px 6px;
-      border: 1px solid #3498db;
-      border-radius: 4px;
-      font-size: 12px;
-      background: white;
-      color: #2c3e50;
-      cursor: pointer;
-    `;
     
     options.forEach(([value, label]) => {
       const option = document.createElement('option');
