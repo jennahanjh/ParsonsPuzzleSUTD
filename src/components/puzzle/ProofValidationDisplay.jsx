@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ProofValidator from '../utils/ProofValidator';
-import KatexRenderer from './KatexRenderer';
+import ProofValidator from '../../utils/ProofValidator';
+import { KatexRenderer } from '../renderers';
 import './ProofValidationDisplay.css';
 
 const ProofValidationDisplay = ({ puzzle, proofBlocks, onReset, onNextPuzzle, isLastPuzzle }) => {

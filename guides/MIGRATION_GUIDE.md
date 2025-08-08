@@ -157,15 +157,15 @@ Go to: http://localhost:5000/api/puzzles/category/bigO
 The current frontend will continue to work with local data. To use the API:
 
 ### Option A: Keep Both (Recommended for Development)
-1. Copy the API-enabled component:
+1. The API-enabled component is now the main App.jsx file:
    ```powershell
-   copy src\AppWithAPI.jsx src\App.jsx
+   # App.jsx now includes full API integration
    ```
 
-2. Import the new CSS:
+2. Import the legacy CSS if needed:
    ```jsx
-   // Add to App.jsx
-   import './styles/api.css';
+   // Add to App.jsx if using legacy components
+   import './styles/legacy-api.css';
    ```
 
 3. The app will automatically:

@@ -1,0 +1,120 @@
+/* Error tooltip system */
+.errorTooltipWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.errorIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba(248, 81, 73, 0.15);
+  border: 1px solid var(--color-danger-emphasis);
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  animation: pulseWarning 2s infinite;
+  /* Icon styling */
+  color: var(--color-danger-emphasis);
+}
+
+.errorIndicator svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.errorIndicator:hover {
+  background-color: rgba(248, 81, 73, 0.25);
+  color: var(--color-danger-fg);
+  transform: scale(1.05);
+  animation: none;
+}
+
+@keyframes pulseWarning {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.errorTooltip {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 12px;
+  width: 300px;
+  max-width: calc(100vw - 40px);
+  background-color: var(--color-canvas-subtle);
+  border: 1px solid var(--color-danger-emphasis);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(248, 81, 73, 0.2);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  pointer-events: none;
+}
+
+.errorTooltipWrapper:hover .errorTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.errorTooltipArrow {
+  position: absolute;
+  top: 100%;
+  right: 6px; /* Center arrow on 28px circle: 28/2 - 8px arrow width/2 = 6px from right */
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--color-danger-emphasis);
+}
+
+.errorTooltipArrow::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: -7px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid var(--color-canvas-subtle);
+}
+
+.errorTooltipContent {
+  padding: 12px 16px;
+  color: var(--color-fg-default);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.errorTooltipContent strong {
+  color: var(--color-danger-fg);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .errorTooltip {
+    right: -50px;
+    width: 280px;
+    left: auto;
+  }
+  
+  .errorTooltipArrow {
+    right: 60px;
+  }
+}

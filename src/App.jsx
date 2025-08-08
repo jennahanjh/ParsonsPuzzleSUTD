@@ -1,34 +1,43 @@
-import React, { useState } from 'react';
-import PuzzleDisplay from './components/PuzzleDisplay';
-import { ALL_PUZZLES } from './puzzles/index';
+import React from 'react';
+import { PuzzleDisplay, UnifiedControlPanel, LoadingState } from './components';
+import { useAppState } from './hooks/useAppState';
 import './App.css';
+import './styles/legacy-api.css';
 
 function App() {
-  const [currentPuzzle, setCurrentPuzzle] = useState(ALL_PUZZLES[0]);
+  const {
+    currentPuzzle,
+    useLocalData,
+    puzzles,
+    isUsingApi,
+    isLoading,
+    healthLoading,
+    puzzlesError,
+    isLastPuzzle,
+    handlePuzzleChange,
+    handleNextPuzzle,
+    toggleDataSource
+  } = useAppState();
 
-  const handlePuzzleChange = (event) => {
-    const puzzleId = event.target.value;
-    const puzzle = ALL_PUZZLES.find(p => p.id === puzzleId);
-    setCurrentPuzzle(puzzle);
-  };
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <LoadingState 
+        title="Loading puzzles..."
+        message="Connecting to database..."
+      />
+    );
+  }
 
-  const handleNextPuzzle = () => {
-    const currentIndex = ALL_PUZZLES.findIndex(p => p.id === currentPuzzle.id);
-    const nextIndex = (currentIndex + 1) % ALL_PUZZLES.length; // Wrap around to first puzzle if at end
-    setCurrentPuzzle(ALL_PUZZLES[nextIndex]);
-  };
-
-  const currentPuzzleIndex = ALL_PUZZLES.findIndex(p => p.id === currentPuzzle.id);
-  const isLastPuzzle = currentPuzzleIndex === ALL_PUZZLES.length - 1;
-
-  // Helper function to clean up LaTeX for display in select options
-  const cleanTitle = (title) => {
-    return title
-      .replace(/\\text\{([^}]*)\}/g, '$1')
-      .replace(/\\/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-  };
+  // Handle case where no puzzle is selected yet
+  if (!currentPuzzle) {
+    return (
+      <LoadingState 
+        title="No puzzles available"
+        message="Please check your connection or try refreshing the page."
+      />
+    );
+  }
 
   return (
     <div className="App">
@@ -38,22 +47,16 @@ function App() {
           <p>Practice formal mathematical proofs through interactive drag-and-drop puzzles</p>
         </header>
 
-        <nav className="puzzle-nav">
-          <div className="puzzle-selector">
-            <label htmlFor="puzzle">Select Puzzle: </label>
-            <select 
-              id="puzzle"
-              value={currentPuzzle.id} 
-              onChange={handlePuzzleChange}
-            >
-              {ALL_PUZZLES.map(puzzle => (
-                <option key={puzzle.id} value={puzzle.id}>
-                  {puzzle.displayTitle || cleanTitle(puzzle.title)}
-                </option>
-              ))}
-            </select>
-          </div>
-        </nav>
+        <UnifiedControlPanel
+          isUsingApi={isUsingApi}
+          puzzles={puzzles}
+          currentPuzzle={currentPuzzle}
+          useLocalData={useLocalData}
+          onToggleDataSource={toggleDataSource}
+          onPuzzleChange={handlePuzzleChange}
+          healthLoading={healthLoading}
+          puzzlesError={puzzlesError}
+        />
 
         <main className="main-content">
           <PuzzleDisplay 
@@ -66,6 +69,9 @@ function App() {
 
         <footer className="app-footer">
           <p>SUTD 50.004 Algorithms - Interactive Learning Tool</p>
+          <p className="tech-info">
+            {isUsingApi ? 'Connected to MongoDB Atlas' : 'Using local puzzle data'}
+          </p>
         </footer>
       </div>
     </div>

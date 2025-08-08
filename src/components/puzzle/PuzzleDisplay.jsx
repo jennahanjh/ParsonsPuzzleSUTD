@@ -17,7 +17,7 @@ import {
 
 import ProofBlock from './ProofBlock';
 import ProofValidationDisplay from './ProofValidationDisplay';
-import KatexRenderer from './KatexRenderer';
+import { KatexRenderer } from '../renderers';
 import './PuzzleDisplay.css';
 
 const PuzzleDisplay = ({ puzzle, onNextPuzzle, isLastPuzzle }) => {

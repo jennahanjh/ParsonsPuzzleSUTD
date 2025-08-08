@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import KatexRenderer from './KatexRenderer';
+import { KatexRenderer } from '../renderers';
 import './ProofBlock.css';
 
 const ProofBlock = ({

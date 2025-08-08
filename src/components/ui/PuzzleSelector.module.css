@@ -1,0 +1,58 @@
+/* Puzzle selector styling */
+.puzzleSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.puzzleSelector.compact {
+  gap: 8px;
+}
+
+.puzzleSelector label,
+.puzzleSelector.compact label {
+  font-weight: 600;
+  color: var(--color-fg-default);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.puzzleSelector select,
+.puzzleSelector.compact select {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+  background: var(--color-canvas-default);
+  color: var(--color-fg-default);
+  font-size: 14px;
+  min-width: 280px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+}
+
+.puzzleSelector select:focus,
+.puzzleSelector.compact select:focus {
+  outline: 2px solid var(--color-accent-fg);
+  outline-offset: -2px;
+  border-color: var(--color-accent-fg);
+}
+
+.puzzleSelector select:hover,
+.puzzleSelector.compact select:hover {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-canvas-subtle);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .puzzleSelector.compact {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .puzzleSelector.compact select {
+    min-width: 250px;
+    width: 100%;
+  }
+}

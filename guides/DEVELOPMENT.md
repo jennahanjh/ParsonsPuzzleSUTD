@@ -40,7 +40,7 @@ The backend now has relaxed CORS settings that allow:
 - All standard HTTP methods (GET, POST, PUT, DELETE, OPTIONS)
 
 ### Frontend API Integration
-The frontend now uses `AppWithAPI.jsx` which:
+The main `App.jsx` file now includes full API integration and:
 - Automatically connects to the backend API
 - Falls back to local puzzle data if API is unavailable
 - Shows connection status (🌐 Database or 💾 Local)

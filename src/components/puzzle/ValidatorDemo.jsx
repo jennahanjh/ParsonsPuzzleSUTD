@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ProofValidator, { ValidationUtils } from '../utils/ProofValidator';
-import { N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED } from '../puzzles/bigOProofs';
+import ProofValidator, { ValidationUtils } from '../../utils/ProofValidator';
+import { N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED } from '../../puzzles/bigOProofs';
 
 const ValidatorDemo = () => {
   const [validator] = useState(() => new ProofValidator(N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED));
