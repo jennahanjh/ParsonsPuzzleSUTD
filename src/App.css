@@ -1,11 +1,13 @@
 .App {
-  text-align: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
   color: #f0f6fc;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
+  flex: 1;
   width: var(--content-width-preferred, 85%);
   max-width: var(--content-width-max, 87.5rem);
   min-width: var(--content-width-min, 80%);
@@ -13,76 +15,14 @@
   padding: var(--margin-lg, 1rem);
 }
 
-.App-header {
-  padding: 0.5rem 0;
-  border-bottom: var(--border-thin, 0.0625rem) solid #30363d;
-  margin-bottom: var(--margin-lg, 1rem);
-}
-
-.App-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  color: #58a6ff;
-  font-weight: 700;
-}
-
-.App-header p {
-  font-size: 1.1rem;
-  color: #8b949e;
-  margin: 0;
-}
-
-.puzzle-nav {
-  margin-bottom: var(--margin-2xl, 2rem);
-  padding: var(--padding-lg, 0.75rem 1rem);
-  background: #161b22;
-  border: var(--border-thin, 0.0625rem) solid #30363d;
-  border-radius: var(--radius-md, 0.5rem);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--gap-lg, 1rem);
-}
-
-.puzzle-selector {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.puzzle-selector label {
-  font-weight: 600;
-  color: #f0f6fc;
-  font-size: 1rem;
-}
-
-.puzzle-selector select {
-  padding: 0.5rem 1rem;
-  border: 0.0625rem solid #30363d; /* ~1px */
-  border-radius: 0.375rem; /* ~6px */
-  background: #0d1117;
-  color: #f0f6fc;
-  font-size: 0.9rem;
-  min-width: 18.75rem; /* ~300px */
-  cursor: pointer;
-}
-
-.puzzle-selector select:focus {
-  outline: none;
-  border-color: #58a6ff;
-  box-shadow: 0 0 0 0.125rem rgba(88, 166, 255, 0.2); /* ~2px */
-}
-
-.main-content {
-  flex: 1;
-}
-
 .app-footer {
-  margin-top: 3rem;
-  padding-top: 2rem;
+  margin-top: auto;
+  padding: 2rem 1rem 1rem;
   border-top: 1px solid #30363d;
   color: #8b949e;
   font-size: 0.9rem;
+  text-align: center;
+  background: var(--color-canvas-subtle);
 }
 
 .app-footer p {
@@ -96,16 +36,7 @@
     padding: var(--margin-lg, 1rem);
   }
   
-  .App-header h1 {
-    font-size: 2rem;
-  }
-  
-  .puzzle-nav {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .puzzle-selector select {
-    min-width: 15.625rem; /* ~250px */
+  .app-footer {
+    padding: 1.5rem 0.5rem 1rem;
   }
 }
