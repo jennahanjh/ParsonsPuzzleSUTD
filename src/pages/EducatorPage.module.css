@@ -25,6 +25,54 @@
   margin: 0;
 }
 
+.success-message {
+  background: var(--color-success-subtle);
+  color: var(--color-success-fg);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-success-fg);
+  margin-top: 1rem;
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.puzzle-summary {
+  background: var(--color-canvas-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.puzzle-summary p {
+  color: var(--color-fg-default);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.category-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.category-stat:last-child {
+  border-bottom: none;
+}
+
+.category-stat span {
+  color: var(--color-fg-muted);
+}
+
+.category-stat strong {
+  color: var(--color-accent-fg);
+}
+
 .educator-content {
   max-width: 100%;
 }
