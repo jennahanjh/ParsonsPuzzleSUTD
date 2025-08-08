@@ -3,6 +3,7 @@ import PuzzleDisplay from './components/PuzzleDisplay';
 import { usePuzzles, useApiHealth } from './hooks/usePuzzles';
 import { ALL_PUZZLES } from './puzzles/index';
 import './App.css';
+import './styles/api.css';
 
 function App() {
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
