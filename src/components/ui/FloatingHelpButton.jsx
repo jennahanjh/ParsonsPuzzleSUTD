@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DictionaryModal from './DictionaryModal';
-import './FloatingHelpButton.css';
+import styles from './FloatingHelpButton.module.css';
 
 const FloatingHelpButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -8,7 +8,7 @@ const FloatingHelpButton = () => {
   return (
     <>
       <button 
-        className="floating-help-btn"
+        className={styles['floating-help-btn']}
         onClick={() => setIsModalOpen(true)}
         title="Open Dictionary & Help"
       >
