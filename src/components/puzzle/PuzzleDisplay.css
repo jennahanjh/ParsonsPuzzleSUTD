@@ -146,6 +146,10 @@
   position: relative;
   width: 100%; /* Ensure full width within container */
   box-sizing: border-box; /* Include padding/border in width calculation */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
+  height: auto; /* Allow height to adjust to content */
+  word-wrap: break-word; /* Ensure text wraps within container */
 }
 
 .puzzle-palette-container .droppable-area {
@@ -293,6 +297,10 @@
   .droppable-area {
     min-height: 18.75rem; /* ~300px */
     padding: 1rem; /* ~16px */
+    height: auto; /* Allow height to adjust to content on mobile */
+    overflow-x: hidden; /* Hide horizontal scrollbar on mobile */
+    overflow-y: auto; /* Maintain vertical scrolling capability on mobile */
+    word-wrap: break-word; /* Ensure text wraps on mobile */
   }
 }
 

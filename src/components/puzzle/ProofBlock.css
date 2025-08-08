@@ -10,7 +10,43 @@
   font-family: inherit;
   transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
   user-select: none;
-  overflow: hidden;
+  overflow: hidden; /* Keep content within block boundaries */
+  overflow-wrap: anywhere; /* More aggressive wrapping than break-word */
+  word-wrap: break-word; /* Legacy support for word wrapping */
+  word-break: break-word; /* Break long words aggressively */
+  hyphens: auto; /* Add hyphenation for better breaking */
+  min-height: fit-content; /* Ensure minimum height accommodates content */
+  width: 100%; /* Ensure consistent width */
+  box-sizing: border-box; /* Include padding in width calculation */
+  white-space: normal; /* Allow normal text flow */
+  line-height: 1.5; /* Better line spacing for mixed content */
+  text-wrap: wrap; /* Modern CSS text wrapping */
+}
+
+/* Emergency fallback for extremely long content that still doesn't wrap */
+.proof-block * {
+  max-width: 100% !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Ultra-specific fix for the long text case you showed */
+.proof-block .katex .base .mord.text .mord,
+.proof-block .katex .katex-html .base .mord.text .mord,
+.proof-block span[class*="mord text"] span[class*="mord"] {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  word-spacing: normal !important;
+  font-size: inherit !important;
+  display: inline !important;
+  max-width: 100% !important;
+}
+
+/* Force break on any text longer than container */
+.proof-block .katex * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .proof-block::before {
@@ -99,17 +135,78 @@
 /* KaTeX content styling */
 .proof-block .katex {
   font-size: 1.1em;
-  line-height: 1.4;
+  line-height: 1.6; /* Increased line height for better readability */
   color: var(--color-fg-default);
+  max-width: 100%; /* Ensure KaTeX doesn't exceed container width */
+  overflow-wrap: anywhere; /* More aggressive wrapping for long expressions */
+  word-break: break-all; /* Break anywhere if necessary */
+  white-space: normal; /* Allow normal text wrapping */
+  display: inline; /* Changed from inline-block to inline for better flow */
+  width: auto; /* Let content determine width naturally */
+}
+
+/* Specific handling for KaTeX text elements with non-breaking spaces */
+.proof-block .katex .mord.text,
+.proof-block .katex .mord.text .mord {
+  white-space: normal !important; /* Override non-breaking spaces */
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  word-spacing: normal !important; /* Allow normal word spacing */
+}
+
+/* Prevent excessive wrapping of inline elements */
+.proof-block .katex select,
+.proof-block select {
+  white-space: nowrap !important;
+  display: inline-block !important;
+  word-break: keep-all !important;
+}
+
+/* Force wrapping of long mathematical expressions */
+.proof-block .katex-display,
+.proof-block .katex-html {
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  white-space: normal !important;
+}
+
+/* Specific handling for mathematical content that tends to overflow */
+.proof-block .katex .mord.mathdefault,
+.proof-block .katex .mord.mathnormal,
+.proof-block .katex .mord.mathit {
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Critical fix for the specific case with long text descriptions */
+.proof-block .katex-html .base .mord.text .mord,
+.proof-block .katex-html .mord.text,
+.proof-block .katex .mtext {
+  white-space: pre-wrap !important; /* Allow wrapping while preserving some formatting */
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  max-width: 100% !important;
+  display: inline !important;
+}
+
+/* Handle the katex-html container specifically */
+.proof-block .katex-html {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  display: inline !important;
+  max-width: 100% !important;
 }
 
 .proof-block .katex .mord {
   color: var(--color-fg-default);
+  word-break: normal; /* Allow normal breaking for math ordinaries */
 }
 
 .proof-block .katex .mbin,
 .proof-block .katex .mrel {
   color: var(--color-accent-fg);
+  white-space: nowrap; /* Keep binary operators together */
 }
 
 .proof-block .katex .mopen,
@@ -122,9 +219,34 @@
   color: var(--color-fg-default);
 }
 
+/* Ensure KaTeX base elements can wrap properly but preserve inline elements */
+.proof-block .katex .base {
+  display: inline;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+/* Allow KaTeX spans to wrap but keep inline elements together */
+.proof-block .katex .katex-html {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  display: inline;
+}
+
+/* Keep mathematical operators together but allow breaking around them */
+.proof-block .katex .mbin,
+.proof-block .katex .mrel,
+.proof-block .katex .mop {
+  white-space: nowrap !important; /* Keep individual operators intact */
+}
+
 .dropdown-wrapper {
   margin-top: 0.5rem;
   font-size: 0.9rem;
+  width: 100%; /* Ensure wrapper takes full width */
+  overflow: visible; /* Ensure dropdown menus can appear */
 }
 
 .dropdown-wrapper select {
@@ -148,6 +270,11 @@ select.dropdown-complexity {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  display: inline-block; /* Prevent wrapping of dropdowns */
+  white-space: nowrap; /* Prevent text wrapping inside dropdowns */
+  vertical-align: middle; /* Align with surrounding text */
+  min-width: auto; /* Allow natural sizing */
+  max-width: none; /* Don't constrain width */
   
   /* Dark theme base styling */
   background-color: var(--color-canvas-subtle);

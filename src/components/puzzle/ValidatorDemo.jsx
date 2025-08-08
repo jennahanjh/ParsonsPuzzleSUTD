@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import ProofValidator, { ValidationUtils } from '../../utils/ProofValidator';
-import { N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED } from '../../puzzles/bigOProofs';
+import { PuzzleLoader } from '../../services/puzzleLoader';
 
 const ValidatorDemo = () => {
-  const [validator] = useState(() => new ProofValidator(N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED));
+  // Get the puzzle from the new JSON system
+  const testPuzzle = PuzzleLoader.getPuzzleById('proof1'); // This is the n² + n³ = Θ(n³) puzzle
+  const [validator] = useState(() => new ProofValidator(testPuzzle));
   const [testOrder, setTestOrder] = useState([]);
   const [result, setResult] = useState(null);
 
@@ -22,7 +24,7 @@ const ValidatorDemo = () => {
     },
     {
       name: "Complete correct solution",
-      order: N_SQUARED_PLUS_N_CUBED_THETA_N_CUBED.solutionOrder
+      order: testPuzzle.solutionOrder
     },
     {
       name: "Missing middle blocks",

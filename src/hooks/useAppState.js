@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { usePuzzles, useApiHealth } from './usePuzzles';
-import { ALL_PUZZLES } from '../puzzles/index';
+import { PuzzleLoader } from '../services/puzzleLoader';
 
 export const useAppState = () => {
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
@@ -10,8 +10,9 @@ export const useAppState = () => {
   const { puzzles: apiPuzzles, loading: puzzlesLoading, error: puzzlesError } = usePuzzles();
   const { isHealthy: apiHealthy, loading: healthLoading } = useApiHealth();
   
-  // Determine which puzzle data to use
-  const puzzles = useLocalData || !apiHealthy || puzzlesError ? ALL_PUZZLES : apiPuzzles;
+  // Determine which puzzle data to use - now using JSON-based PuzzleLoader for fallback
+  const localPuzzles = PuzzleLoader.getAllPuzzles();
+  const puzzles = useLocalData || !apiHealthy || puzzlesError ? localPuzzles : apiPuzzles;
   const isUsingApi = !useLocalData && apiHealthy && !puzzlesError && apiPuzzles.length > 0;
 
   // Set initial puzzle when data loads
