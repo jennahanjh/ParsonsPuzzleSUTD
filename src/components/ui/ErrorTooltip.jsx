@@ -2,11 +2,17 @@ import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import styles from './ErrorTooltip.module.css';
 
-const ErrorTooltip = ({ error, show = true }) => {
+const ErrorTooltip = ({ error, show = true, containerMode = false }) => {
   if (!show || !error) return null;
 
+  // Container mode: positions itself absolutely in top-right of parent
+  // Normal mode: displays inline as before
+  const wrapperClass = containerMode 
+    ? styles.errorTooltipContainerWrapper 
+    : styles.errorTooltipWrapper;
+
   return (
-    <div className={styles.errorTooltipWrapper}>
+    <div className={wrapperClass}>
       <span className={styles.errorIndicator} title="Connection Issues">
         <AlertTriangle size={16} />
       </span>

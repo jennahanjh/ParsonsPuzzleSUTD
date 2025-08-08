@@ -13,34 +13,39 @@ const UnifiedControlPanel = ({
   puzzlesError
 }) => {
   return (
-    <div className={styles.unifiedControlPanel}>
-      <div className={styles.controlPanelStatus}>
-        <DataSourceBadge 
-          isUsingApi={isUsingApi}
-          puzzleCount={puzzles.length}
-        />
-      </div>
-      
-      <div className={styles.controlPanelCenter}>
-        <DataSourceToggle 
-          useLocalData={useLocalData}
-          onToggle={onToggleDataSource}
-          isLoading={healthLoading}
-        />
+    <div className={styles.unifiedControlPanelWrapper}>
+      <div className={styles.unifiedControlPanel}>
+        <div className={styles.controlPanelStatus}>
+          <DataSourceBadge 
+            isUsingApi={isUsingApi}
+            puzzleCount={puzzles.length}
+          />
+        </div>
         
-        <PuzzleSelector 
-          puzzles={puzzles}
-          currentPuzzle={currentPuzzle}
-          onPuzzleChange={onPuzzleChange}
-        />
+        <div className={styles.controlPanelCenter}>
+          <DataSourceToggle 
+            useLocalData={useLocalData}
+            onToggle={onToggleDataSource}
+            isLoading={healthLoading}
+          />
+          
+          <PuzzleSelector 
+            puzzles={puzzles}
+            currentPuzzle={currentPuzzle}
+            onPuzzleChange={onPuzzleChange}
+          />
+        </div>
+        
+        <div className={styles.controlPanelActions}>
+          {/* ErrorTooltip now positioned absolutely */}
+        </div>
       </div>
       
-      <div className={styles.controlPanelActions}>
-        <ErrorTooltip 
-          error={puzzlesError}
-          show={puzzlesError && !useLocalData}
-        />
-      </div>
+      <ErrorTooltip 
+        error={puzzlesError}
+        show={puzzlesError && !useLocalData}
+        containerMode={true}
+      />
     </div>
   );
 };
