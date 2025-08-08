@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AlertTriangle, Globe, HardDrive } from 'lucide-react';
 import PuzzleDisplay from './components/PuzzleDisplay';
 import { usePuzzles, useApiHealth } from './hooks/usePuzzles';
 import { ALL_PUZZLES } from './puzzles/index';
@@ -97,7 +98,17 @@ function App() {
           <div className="control-panel-status">
             {/* Data source indicator */}
             <span className={`status-badge ${isUsingApi ? 'api' : 'local'}`}>
-              {isUsingApi ? '🌐 Database' : '💾 Local'} 
+              {isUsingApi ? (
+                <>
+                  <Globe size={14} />
+                  Database
+                </>
+              ) : (
+                <>
+                  <HardDrive size={14} />
+                  Local
+                </>
+              )}
               ({puzzles.length} puzzles)
             </span>
           </div>
@@ -136,7 +147,7 @@ function App() {
             {puzzlesError && !useLocalData && (
               <div className="error-tooltip-wrapper">
                 <span className="error-indicator" title="Connection Issues">
-                  ⚠️
+                  <AlertTriangle size={16} />
                 </span>
                 <div className="error-tooltip">
                   <div className="error-tooltip-arrow"></div>
