@@ -260,10 +260,10 @@
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 48rem) { /* ~768px */
   .validation-header {
     flex-direction: column;
-    gap: 15px;
+    gap: 0.9375rem; /* ~15px */
     text-align: center;
   }
 

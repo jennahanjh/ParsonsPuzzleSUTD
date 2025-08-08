@@ -5,6 +5,9 @@
   overflow: visible;
   z-index: 1;
   margin-bottom: 2rem;
+  max-width: 75rem; /* ~1200px at 16px base */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Unified Control Panel - responsive layout with three sections */
@@ -12,12 +15,12 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: var(--gap-lg, 16px);
-  padding: var(--padding-xl, 18px 24px);
+  gap: var(--gap-lg, 1rem);
+  padding: var(--padding-xl, 1.125rem 1.5rem);
   background: linear-gradient(135deg, var(--color-canvas-subtle) 0%, var(--color-canvas-default) 100%);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg, 12px);
-  box-shadow: var(--color-primer-shadow-inset), var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.12));
+  border: 0.0625rem solid var(--color-border-default); /* ~1px */
+  border-radius: var(--radius-lg, 0.75rem);
+  box-shadow: var(--color-primer-shadow-inset), var(--shadow-sm, 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12));
   transition: var(--transition-smooth, all 0.2s cubic-bezier(0.3, 0, 0.5, 1));
   position: relative;
   overflow: hidden;
@@ -30,9 +33,9 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 0.125rem; /* ~2px */
   background: linear-gradient(90deg, var(--color-accent-fg), var(--color-success-fg), var(--color-attention-fg));
-  border-radius: var(--radius-lg, 12px) var(--radius-lg, 12px) 0 0;
+  border-radius: var(--radius-lg, 0.75rem) var(--radius-lg, 0.75rem) 0 0;
   opacity: 0.6;
   z-index: 1;
 }
@@ -41,8 +44,8 @@
 .unifiedControlPanel:hover {
   border-color: var(--color-border-subtle);
   background: linear-gradient(135deg, var(--color-canvas-default) 0%, var(--color-canvas-inset) 100%);
-  transform: translateY(-1px);
-  box-shadow: var(--color-primer-shadow-inset), var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
+  transform: translateY(-0.0625rem); /* ~-1px */
+  box-shadow: var(--color-primer-shadow-inset), var(--shadow-md, 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15));
 }
 
 /* Grid sections - using shared layout patterns */
@@ -55,7 +58,7 @@
 .controlPanelCenter {
   display: flex;
   align-items: center;
-  gap: var(--gap-xl, 20px);
+  gap: var(--gap-xl, 1.25rem);
   justify-content: center;
   flex-wrap: nowrap;
 }
@@ -69,7 +72,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 48rem) { /* ~768px */
   .unifiedControlPanelWrapper {
     margin-bottom: 1.5rem;
   }
@@ -77,7 +80,7 @@
   .unifiedControlPanel {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    gap: var(--gap-lg, 16px);
+    gap: var(--gap-lg, 1rem);
     text-align: center;
   }
   
@@ -88,7 +91,7 @@
   
   .controlPanelCenter {
     flex-direction: column;
-    gap: var(--gap-md, 12px);
+    gap: var(--gap-md, 0.75rem);
     grid-row: 2;
   }
   

@@ -6,14 +6,14 @@
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 87.5rem; /* ~1400px at 16px base */
   margin: 0 auto;
-  padding: 20px;
+  padding: 1.25rem; /* ~20px */
 }
 
 .App-header {
   padding: 2rem 0;
-  border-bottom: 1px solid #30363d;
+  border-bottom: 0.0625rem solid #30363d; /* ~1px */
   margin-bottom: 2rem;
 }
 
@@ -34,8 +34,8 @@
   margin-bottom: 2rem;
   padding: 1rem;
   background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 8px;
+  border: 0.0625rem solid #30363d; /* ~1px */
+  border-radius: 0.5rem; /* ~8px */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -56,19 +56,19 @@
 
 .puzzle-selector select {
   padding: 0.5rem 1rem;
-  border: 1px solid #30363d;
-  border-radius: 6px;
+  border: 0.0625rem solid #30363d; /* ~1px */
+  border-radius: 0.375rem; /* ~6px */
   background: #0d1117;
   color: #f0f6fc;
   font-size: 0.9rem;
-  min-width: 300px;
+  min-width: 18.75rem; /* ~300px */
   cursor: pointer;
 }
 
 .puzzle-selector select:focus {
   outline: none;
   border-color: #58a6ff;
-  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+  box-shadow: 0 0 0 0.125rem rgba(88, 166, 255, 0.2); /* ~2px */
 }
 
 .main-content {
@@ -99,6 +99,6 @@
   }
   
   .puzzle-selector select {
-    min-width: 250px;
+    min-width: 15.625rem; /* ~250px */
   }
 }
